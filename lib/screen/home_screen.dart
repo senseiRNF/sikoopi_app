@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
-import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
-import 'package:sikoopi_app/widgets/specific/home_screen_header.dart';
+import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_drawer.dart';
+import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_fragment.dart';
+import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_screen_header.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,64 +25,20 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _key,
       body: SafeArea(
-        child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
+        child: Column(
           children: [
-            Stack(
-              children: [
-                const HomeScreenHeader(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: IconButton(
-                        onPressed: () {
-                          _key.currentState!.openDrawer();
-                        },
-                        icon: Icon(
-                          Icons.menu,
-                          color: GlobalColor.defaultWhite,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            HomeScreenHeader(
+              onPressed: () {
+                _key.currentState!.openEndDrawer();
+              },
+            ),
+            const Expanded(
+              child: HomeFragment(),
             ),
           ],
         ),
       ),
-      endDrawer: Drawer(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                '${GlobalString.assetImagePath}/background_1.png',
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: ListView(
-            children: [
-              ListTile(
-                leading: Icon(
-                  Icons.person,
-                  color: GlobalColor.defaultWhite,
-                ),
-                title: GlobalText(
-                  content: 'Profile',
-                  size: 18.0,
-                  color: GlobalColor.defaultWhite,
-                ),
-                onTap: () {
-
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      endDrawer: const HomeDrawer(),
     );
   }
 

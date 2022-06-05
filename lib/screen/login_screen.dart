@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/widgets/specific/login_layout.dart';
-import 'package:sikoopi_app/widgets/specific/login_screen_header.dart';
-import 'package:sikoopi_app/widgets/specific/sign_up_layout.dart';
+import 'package:sikoopi_app/widgets/specific/login_screen_widgets/login_fragment.dart';
+import 'package:sikoopi_app/widgets/specific/login_screen_widgets/login_screen_header.dart';
+import 'package:sikoopi_app/widgets/specific/login_screen_widgets/sign_up_fragment.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -36,8 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             selectedMenu == 0 ?
-            const LoginLayout() :
-            const SignUpLayout(),
+            const LoginFragment() :
+            const SignUpFragment(),
           ],
         ),
       ),
