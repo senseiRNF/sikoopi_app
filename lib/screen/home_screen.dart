@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
-import 'package:sikoopi_app/widgets/global_text.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_drawer.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_screen_header.dart';
@@ -20,6 +20,49 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  List<CartClasses> cartClassesList = [
+    CartClasses(
+      id: 1,
+      imagePath: '${GlobalString.assetImagePath}/item_gula_icon.png',
+      totalQty: 0,
+    ),
+    CartClasses(
+      id: 2,
+      imagePath: '${GlobalString.assetImagePath}/item_minyak_icon.png',
+      totalQty: 0,
+    ),
+    CartClasses(
+      id: 3,
+      imagePath: '${GlobalString.assetImagePath}/item_sabun_icon.png',
+      totalQty: 0,
+    ),
+    CartClasses(
+      id: 4,
+      imagePath: '${GlobalString.assetImagePath}/item_pelembut_pakaian_icon.png',
+      totalQty: 0,
+    ),
+    CartClasses(
+      id: 5,
+      imagePath: '${GlobalString.assetImagePath}/item_beras_icon.png',
+      totalQty: 0,
+    ),
+    CartClasses(
+      id: 6,
+      imagePath: '${GlobalString.assetImagePath}/item_telur_icon.png',
+      totalQty: 0,
+    ),
+    CartClasses(
+      id: 7,
+      imagePath: '${GlobalString.assetImagePath}/item_tepung_icon.png',
+      totalQty: 0,
+    ),
+    CartClasses(
+      id: 8,
+      imagePath: '${GlobalString.assetImagePath}/item_sabun_piring_icon.png',
+      totalQty: 0,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,13 +75,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 _key.currentState!.openEndDrawer();
               },
             ),
-            const Expanded(
-              child: HomeFragment(),
+            Expanded(
+              child: HomeFragment(
+                cartClassesList: cartClassesList,
+                onChangeQty: (List<int> updateList) {
+                  CartClasses cartClassesTemp = cartClassesList[updateList[0]];
+
+                  setState(() {
+                    cartClassesList[updateList[0]] = CartClasses(
+                      id: cartClassesTemp.id,
+                      imagePath: cartClassesTemp.imagePath,
+                      totalQty: updateList[1],
+                    );
+                  });
+                },
+              ),
             ),
           ],
         ),
       ),
-      endDrawer: const HomeDrawer(),
+      endDrawer: HomeDrawer(cartClassesList: cartClassesList,),
     );
   }
 

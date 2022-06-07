@@ -15,7 +15,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreen extends State<ProfileScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -107,7 +106,6 @@ class _ProfileScreen extends State<ProfileScreen> {
                 ),
               ],
             ),
-
           ],
         ),
       ),

@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/screen/order_cart_screen.dart';
 import 'package:sikoopi_app/screen/profile_screen.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/drawer_item.dart';
 
 class HomeDrawer extends StatelessWidget {
+  final List<CartClasses> cartClassesList;
+
   const HomeDrawer({
     Key? key,
+    required this.cartClassesList,
   }) : super(key: key);
 
   @override
@@ -57,7 +62,13 @@ class HomeDrawer extends StatelessWidget {
                           iconPath: 'order_icon.png',
                           title: GlobalString.orderCartText,
                           onPressed: () {
+                            GlobalRoute(context: context).back(null);
 
+                            GlobalRoute(context: context).moveTo(OrderCartScreen(
+                              cartClassesList: cartClassesList,
+                            ), (callback) {
+
+                            });
                           },
                         ),
                         DrawerItem(
