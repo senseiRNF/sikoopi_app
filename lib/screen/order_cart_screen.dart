@@ -99,7 +99,9 @@ class _OrderCartScreen extends State<OrderCartScreen> {
                   btnColor: GlobalColor.accentColor,
                   padding: const GlobalPaddingClass(
                     paddingLeft: 50.0,
+                    paddingTop: 10.0,
                     paddingRight: 50.0,
+                    paddingBottom: 10.0,
                   ),
                 ) :
                 const Material(),

@@ -3,6 +3,8 @@ import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/screen/checkout_screen.dart';
+import 'package:sikoopi_app/screen/history_screen.dart';
 import 'package:sikoopi_app/screen/order_cart_screen.dart';
 import 'package:sikoopi_app/screen/profile_screen.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
@@ -73,16 +75,24 @@ class HomeDrawer extends StatelessWidget {
                         ),
                         DrawerItem(
                           iconPath: 'payment_icon.png',
-                          title: GlobalString.paymentDeliveryText,
+                          title: GlobalString.checkoutText,
                           onPressed: () {
+                            GlobalRoute(context: context).back(null);
 
+                            GlobalRoute(context: context).moveTo(const CheckoutScreen(), (callback) {
+
+                            });
                           },
                         ),
                         DrawerItem(
                           iconPath: 'history_icon.png',
                           title: GlobalString.historyText,
                           onPressed: () {
+                            GlobalRoute(context: context).back(null);
 
+                            GlobalRoute(context: context).moveTo(const HistoryScreen(), (callback) {
+
+                            });
                           },
                         ),
                       ],

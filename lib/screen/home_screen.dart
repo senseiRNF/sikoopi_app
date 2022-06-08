@@ -78,15 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: HomeFragment(
                 cartClassesList: cartClassesList,
-                onChangeQty: (List<int> updateList) {
-                  CartClasses cartClassesTemp = cartClassesList[updateList[0]];
-
+                onChangeQty: (List<int> updateQty) {
                   setState(() {
-                    cartClassesList[updateList[0]] = CartClasses(
-                      id: cartClassesTemp.id,
-                      imagePath: cartClassesTemp.imagePath,
-                      totalQty: updateList[1],
-                    );
+                    cartClassesList[updateQty[0]].totalQty = updateQty[1];
                   });
                 },
               ),

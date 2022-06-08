@@ -11,7 +11,7 @@ class GlobalString {
   static String profileText = 'Profile';
   static String productText = 'Product';
   static String orderCartText = 'Order & Cart';
-  static String paymentDeliveryText = 'Payment & Delivery';
+  static String checkoutText = 'Payment & Delivery';
   static String historyText = 'History';
   static String editProfileText = 'Edit Profile';
 }
