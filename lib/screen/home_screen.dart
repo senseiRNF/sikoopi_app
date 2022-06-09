@@ -23,42 +23,42 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CartClasses> cartClassesList = [
     CartClasses(
       id: 1,
-      imagePath: '${GlobalString.assetImagePath}/item_gula_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/gula_pasir.png',
       totalQty: 0,
     ),
     CartClasses(
       id: 2,
-      imagePath: '${GlobalString.assetImagePath}/item_minyak_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/minyak_goreng.png',
       totalQty: 0,
     ),
     CartClasses(
       id: 3,
-      imagePath: '${GlobalString.assetImagePath}/item_sabun_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/sabun_cair.png',
       totalQty: 0,
     ),
     CartClasses(
       id: 4,
-      imagePath: '${GlobalString.assetImagePath}/item_pelembut_pakaian_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/pewangi_pakaian.png',
       totalQty: 0,
     ),
     CartClasses(
       id: 5,
-      imagePath: '${GlobalString.assetImagePath}/item_beras_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/beras.png',
       totalQty: 0,
     ),
     CartClasses(
       id: 6,
-      imagePath: '${GlobalString.assetImagePath}/item_telur_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/telur.png',
       totalQty: 0,
     ),
     CartClasses(
       id: 7,
-      imagePath: '${GlobalString.assetImagePath}/item_tepung_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/terigu.png',
       totalQty: 0,
     ),
     CartClasses(
       id: 8,
-      imagePath: '${GlobalString.assetImagePath}/item_sabun_piring_icon.png',
+      imagePath: '${GlobalString.assetImagePath}/product_icon/sabun_cuci_piring.png',
       totalQty: 0,
     ),
   ];

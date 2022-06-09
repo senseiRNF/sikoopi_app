@@ -23,16 +23,41 @@ class ProfilePhotoItem extends StatelessWidget {
       ),
       content: Row(
         children: [
-          Container(
+          SizedBox(
             width: 80.0,
             height: 80.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage(
-                  urlPhoto ?? '',
-                ),
-              ),
+            child: Image.network(
+              urlPhoto ?? '',
+              loadingBuilder: (BuildContext imgContext, Widget child, ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          urlPhoto ?? '',
+                        ),
+                      )
+                    ),
+                  );
+                }
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+              errorBuilder: (BuildContext errContext, obj, stackTrace) {
+                return const Center(
+                  child: Icon(
+                    Icons.account_circle,
+                    size: 60.0,
+                  ),
+                );
+              },
             ),
           ),
           Expanded(
