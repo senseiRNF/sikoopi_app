@@ -12,11 +12,13 @@ import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/drawer_item.dart';
 
 class HomeDrawer extends StatelessWidget {
-  final List<CartClasses> cartClassesList;
+  final List<CartClasses> orderList;
+  final Function onChangeQty;
 
   const HomeDrawer({
     Key? key,
-    required this.cartClassesList,
+    required this.orderList,
+    required this.onChangeQty,
   }) : super(key: key);
 
   @override
@@ -67,7 +69,8 @@ class HomeDrawer extends StatelessWidget {
                             GlobalRoute(context: context).back(null);
 
                             GlobalRoute(context: context).moveTo(OrderCartScreen(
-                              cartClassesList: cartClassesList,
+                              orderList: orderList,
+                              onChangeQty: (List<int> updateQty) => onChangeQty(updateQty),
                             ), (callback) {
 
                             });
@@ -79,7 +82,9 @@ class HomeDrawer extends StatelessWidget {
                           onPressed: () {
                             GlobalRoute(context: context).back(null);
 
-                            GlobalRoute(context: context).moveTo(const CheckoutScreen(), (callback) {
+                            GlobalRoute(context: context).moveTo(CheckoutScreen(
+                              orderList: orderList,
+                            ), (callback) {
 
                             });
                           },

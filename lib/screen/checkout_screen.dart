@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
@@ -11,7 +12,12 @@ import 'package:sikoopi_app/widgets/specific/checkout_screen_widgets/checkout_pa
 import 'package:sikoopi_app/widgets/specific/checkout_screen_widgets/checkout_screen_header.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({Key? key}) : super(key: key);
+  final List<CartClasses> orderList;
+
+  const CheckoutScreen({
+    Key? key,
+    required this.orderList,
+  }) : super(key: key);
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -46,7 +52,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   stage: stage,
                 ),
                 Expanded(
-                  child: stage == 0 ? const CheckoutFragment() :
+                  child: stage == 0 ?
+                  CheckoutFragment(
+                    orderList: widget.orderList,
+                  ) :
                   stage == 1 ? const CheckoutPaymentFragment() :
                   const CheckoutDeliveryFragment(),
                 ),

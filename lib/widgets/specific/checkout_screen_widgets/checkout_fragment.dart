@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 
 class CheckoutFragment extends StatelessWidget {
-  const CheckoutFragment({Key? key}) : super(key: key);
+  final List<CartClasses> orderList;
+
+  const CheckoutFragment({
+    Key? key,
+    required this.orderList,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

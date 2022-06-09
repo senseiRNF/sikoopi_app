@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class HomeFragment extends StatelessWidget {
-  final List<CartClasses> cartClassesList;
+  final List<CartClasses> orderList;
   final Function onChangeQty;
 
   const HomeFragment({
     Key? key,
-    required this.cartClassesList,
+    required this.orderList,
     required this.onChangeQty,
   }) : super(key: key);
 
@@ -24,75 +25,101 @@ class HomeFragment extends StatelessWidget {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
-        itemCount: cartClassesList.length,
+        itemCount: orderList.length,
         itemBuilder: (BuildContext gridContext, int index) {
-          return Column(
-            children: [
-              Expanded(
-                child: Image.asset(
-                  cartClassesList[index].imagePath,
-                  fit: BoxFit.fitWidth,
-                ),
+          return Card(
+            elevation: 10.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0,)
+            ),
+            child: GlobalPadding(
+              paddingClass: const GlobalPaddingClass(
+                paddingTop: 5.0,
+                paddingBottom: 5.0,
               ),
-              Row(
+              content: Column(
                 children: [
                   Expanded(
-                    child: Card(
-                      shape: const CircleBorder(),
-                      child: InkWell(
-                        onTap: () {
-                          if(cartClassesList[index].totalQty > 0) {
-                            onChangeQty([index, cartClassesList[index].totalQty - 1]);
-                          }
-                        },
-                        customBorder: const CircleBorder(),
-                        child: const GlobalPadding(
-                          paddingClass: GlobalPaddingClass(
-                            paddingLeft: 5.0,
-                            paddingTop: 5.0,
-                            paddingRight: 5.0,
-                            paddingBottom: 5.0,
-                          ),
-                          content: Icon(
-                            Icons.remove,
+                    child: Image.asset(
+                      orderList[index].imagePath,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  GlobalText(
+                    content: orderList[index].name,
+                    size: 16.0,
+                    isBold: true,
+                    align: TextAlign.center,
+                  ),
+                  GlobalText(
+                    content: orderList[index].uom,
+                    align: TextAlign.center,
+                  ),
+                  GlobalText(
+                    content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderList[index].price).replaceAll(',', '.')},-",
+                    align: TextAlign.center,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Card(
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            onTap: () {
+                              if(orderList[index].totalQty > 0) {
+                                onChangeQty([index, orderList[index].totalQty - 1]);
+                              }
+                            },
+                            customBorder: const CircleBorder(),
+                            child: const GlobalPadding(
+                              paddingClass: GlobalPaddingClass(
+                                paddingLeft: 5.0,
+                                paddingTop: 5.0,
+                                paddingRight: 5.0,
+                                paddingBottom: 5.0,
+                              ),
+                              content: Icon(
+                                Icons.remove,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GlobalText(
-                      content: cartClassesList[index].totalQty.toString(),
-                      size: 20.0,
-                      isBold: true,
-                      align: TextAlign.center,
-                    ),
-                  ),
-                  Expanded(
-                    child: Card(
-                      shape: const CircleBorder(),
-                      child: InkWell(
-                        onTap: () {
-                          onChangeQty([index, cartClassesList[index].totalQty + 1]);
-                        },
-                        customBorder: const CircleBorder(),
-                        child: const GlobalPadding(
-                          paddingClass: GlobalPaddingClass(
-                            paddingLeft: 5.0,
-                            paddingTop: 5.0,
-                            paddingRight: 5.0,
-                            paddingBottom: 5.0,
-                          ),
-                          content: Icon(
-                            Icons.add,
+                      Expanded(
+                        child: GlobalText(
+                          content: orderList[index].totalQty.toString(),
+                          size: 20.0,
+                          isBold: true,
+                          align: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: Card(
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            onTap: () {
+                              onChangeQty([index, orderList[index].totalQty + 1]);
+                            },
+                            customBorder: const CircleBorder(),
+                            child: const GlobalPadding(
+                              paddingClass: GlobalPaddingClass(
+                                paddingLeft: 5.0,
+                                paddingTop: 5.0,
+                                paddingRight: 5.0,
+                                paddingBottom: 5.0,
+                              ),
+                              content: Icon(
+                                Icons.add,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           );
         },
       ),

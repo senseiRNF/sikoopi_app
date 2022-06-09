@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/screen/checkout_screen.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
+import 'package:sikoopi_app/widgets/specific/order_cart_screen_widgets/order_cart_item.dart';
 import 'package:sikoopi_app/widgets/specific/order_cart_screen_widgets/order_cart_screen_header.dart';
 
 class OrderCartScreen extends StatefulWidget {
-  final List<CartClasses> cartClassesList;
+  final List<CartClasses> orderList;
+  final Function onChangeQty;
 
   const OrderCartScreen({
     Key? key,
-    required this.cartClassesList,
+    required this.orderList,
+    required this.onChangeQty,
   }) : super(key: key);
 
   @override
@@ -26,13 +31,15 @@ class _OrderCartScreen extends State<OrderCartScreen> {
   void initState() {
     super.initState();
 
-    for(int i = 0; i < widget.cartClassesList.length; i++) {
-      if(widget.cartClassesList[i].totalQty > 0) {
+    for(int i = 0; i < widget.orderList.length; i++) {
+      if(widget.orderList[i].totalQty > 0) {
         setState(() {
-          orderList.add(widget.cartClassesList[i]);
+          orderList.add(widget.orderList[i]);
         });
       }
     }
+
+    widget.onChangeQty([0, 0]);
   }
 
   @override
@@ -58,25 +65,9 @@ class _OrderCartScreen extends State<OrderCartScreen> {
                   ListView.builder(
                     itemCount: orderList.length,
                     itemBuilder: (BuildContext listContext, int index) {
-                      return Card(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height / 6,
-                              child: Image.asset(
-                                orderList[index].imagePath,
-                              ),
-                            ),
-                            Expanded(
-                              child: GlobalText(
-                                content: 'Qty: ${orderList[index].totalQty}',
-                                size: 20.0,
-                                align: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        ),
+                      return OrderCartItem(
+                        orderList: orderList[index],
+                        onChangeQty: (int qty) => widget.onChangeQty([index, qty]),
                       );
                     },
                   ) :
@@ -93,7 +84,11 @@ class _OrderCartScreen extends State<OrderCartScreen> {
                 orderList.isNotEmpty ?
                 GlobalElevatedButton(
                   onPressed: () {
+                    GlobalRoute(context: context).moveTo(CheckoutScreen(
+                      orderList: orderList,
+                    ), (callback) {
 
+                    });
                   },
                   title: 'Complete Order',
                   btnColor: GlobalColor.accentColor,
