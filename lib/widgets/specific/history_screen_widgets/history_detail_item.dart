@@ -4,12 +4,12 @@ import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
-class CheckoutItem extends StatelessWidget {
-  final CartClasses orderItem;
+class HistoryDetailItem extends StatelessWidget {
+  final CartClasses historyItem;
 
-  const CheckoutItem({
+  const HistoryDetailItem({
     Key? key,
-    required this.orderItem,
+    required this.historyItem,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class CheckoutItem extends StatelessWidget {
                 paddingBottom: 10.0,
               ),
               content: Image.asset(
-                orderItem.imagePath,
+                historyItem.imagePath,
                 fit: BoxFit.contain,
               ),
             ),
@@ -42,18 +42,18 @@ class CheckoutItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GlobalText(
-                  content: orderItem.name,
+                  content: historyItem.name,
                   size: 18.0,
                   isBold: true,
                   align: TextAlign.center,
                 ),
                 GlobalText(
-                  content: orderItem.uom,
+                  content: historyItem.uom,
                   size: 16.0,
                   align: TextAlign.center,
                 ),
                 GlobalText(
-                  content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.price).replaceAll(',', '.')},-",
+                  content: "Rp.${NumberFormat('#,###', 'en_ID').format(historyItem.price).replaceAll(',', '.')},-",
                   size: 16.0,
                   align: TextAlign.center,
                   padding: const GlobalPaddingClass(
@@ -64,14 +64,14 @@ class CheckoutItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: GlobalText(
-                        content: 'Qty: ${orderItem.totalQty}',
+                        content: 'Qty: ${historyItem.totalQty}',
                         size: 16.0,
                         align: TextAlign.center,
                       ),
                     ),
                     Expanded(
                       child: GlobalText(
-                        content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.totalQty * orderItem.price).replaceAll(',', '.')},-",
+                        content: "Rp.${NumberFormat('#,###', 'en_ID').format(historyItem.totalQty * historyItem.price).replaceAll(',', '.')},-",
                         size: 16.0,
                         align: TextAlign.center,
                       ),

@@ -30,7 +30,6 @@ class CheckoutDeliveryFragment extends StatelessWidget {
       ),
       content: ListView(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         children: isEditing ?
         [
           Card(

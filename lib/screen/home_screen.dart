@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
-import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
-import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
-import 'package:sikoopi_app/screen/order_cart_screen.dart';
-import 'package:sikoopi_app/widgets/global_padding.dart';
-import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_drawer.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_screen_header.dart';
@@ -20,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
+
+  int orderCounter = 0;
 
   @override
   void initState() {
@@ -93,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
       totalQty: 0,
     ),
   ];
+  List<HistoryClasses> historyItemList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       endDrawer: HomeDrawer(
         orderList: cartItemList,
+        historyList: historyItemList,
         onChangeQty: (List<int> qtyChange) {
           setState(() {
             if(qtyChange[1] == 0) {
@@ -157,9 +158,20 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           });
         },
-        callbackScreen: () {
+        callbackScreen: (List<CartClasses> afterSuccessItem, String receiverName, String address) {
           setState(() {
             cartItemList = [];
+            historyItemList.add(
+              HistoryClasses(
+                id: orderCounter,
+                orderDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                receiverName: receiverName,
+                address: address,
+                historyList: afterSuccessItem,
+              ),
+            );
+
+            orderCounter = orderCounter + 1;
           });
         },
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
@@ -7,18 +8,21 @@ import 'package:sikoopi_app/screen/checkout_screen.dart';
 import 'package:sikoopi_app/screen/history_screen.dart';
 import 'package:sikoopi_app/screen/order_cart_screen.dart';
 import 'package:sikoopi_app/screen/profile_screen.dart';
+import 'package:sikoopi_app/screen/splash_screen.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/drawer_item.dart';
 
 class HomeDrawer extends StatelessWidget {
   final List<CartClasses> orderList;
+  final List<HistoryClasses> historyList;
   final Function onChangeQty;
   final Function callbackScreen;
 
   const HomeDrawer({
     Key? key,
     required this.orderList,
+    required this.historyList,
     required this.onChangeQty,
     required this.callbackScreen,
   }) : super(key: key);
@@ -75,9 +79,9 @@ class HomeDrawer extends StatelessWidget {
                               onChangeQty: (List<int> qtyChange) {
                                 onChangeQty(qtyChange);
                               },
-                            ), (callback) {
-                              if(callback != null && callback) {
-                                callbackScreen();
+                            ), (List? callback) {
+                              if(callback != null && callback.isNotEmpty && callback[0]) {
+                                callbackScreen(callback[1], callback[2], callback[3]);
                               }
                             });
                           },
@@ -90,8 +94,10 @@ class HomeDrawer extends StatelessWidget {
 
                             GlobalRoute(context: context).moveTo(CheckoutScreen(
                               orderList: orderList,
-                            ), (callback) {
-
+                            ), (List? callback) {
+                              if(callback != null && callback.isNotEmpty && callback[0]) {
+                                callbackScreen(callback[1], callback[2], callback[3]);
+                              }
                             });
                           },
                         ),
@@ -101,7 +107,9 @@ class HomeDrawer extends StatelessWidget {
                           onPressed: () {
                             GlobalRoute(context: context).back(null);
 
-                            GlobalRoute(context: context).moveTo(const HistoryScreen(), (callback) {
+                            GlobalRoute(context: context).moveTo(HistoryScreen(
+                              historyList: historyList,
+                            ), (callback) {
 
                             });
                           },
@@ -115,7 +123,9 @@ class HomeDrawer extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
+                    GlobalRoute(context: context).back(null);
 
+                    GlobalRoute(context: context).replaceWith(const SplashScreen());
                   },
                   child: GlobalPadding(
                     paddingClass: const GlobalPaddingClass(

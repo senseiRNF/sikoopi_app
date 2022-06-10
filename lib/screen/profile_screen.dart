@@ -18,8 +18,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreen extends State<ProfileScreen> {
   bool isEditMode = false;
 
-  TextEditingController nameTEC = TextEditingController();
-  TextEditingController phoneTEC = TextEditingController();
+  TextEditingController nameTEC = TextEditingController(text: 'Rany Ashisa');
+  TextEditingController phoneTEC = TextEditingController(text: '08126545664');
 
   @override
   void initState() {
@@ -55,7 +55,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0,),
                       ),
-                      child: Column(
+                      child: ListView(
+                        shrinkWrap: true,
                         children: [
                           const SizedBox(
                             height: 30.0,
@@ -101,18 +102,18 @@ class _ProfileScreen extends State<ProfileScreen> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    const ProfilePhotoItem(
+                                    ProfilePhotoItem(
                                       urlPhoto: 'https://ami.animecharactersdatabase.com/uploads/chars/5457-1000260068.jpg',
-                                      name: 'Rany Ashisa',
-                                      phoneNo: '08126545664',
+                                      name: nameTEC.text,
+                                      phoneNo: phoneTEC.text,
                                     ),
-                                    const ProfileItem(
+                                    ProfileItem(
                                       iconPath: 'name_icon.png',
-                                      title: 'Rany Ashisa',
+                                      title: nameTEC.text,
                                     ),
-                                    const ProfileItem(
+                                    ProfileItem(
                                       iconPath: 'phone_no_icon.png',
-                                      title: '08126545664',
+                                      title: phoneTEC.text,
                                     ),
                                     const ProfileItem(
                                       iconPath: 'email_icon.png',

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
+import 'package:sikoopi_app/widgets/specific/checkout_screen_widgets/checkout_complete_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/checkout_screen_widgets/checkout_delivery_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/checkout_screen_widgets/checkout_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/checkout_screen_widgets/checkout_payment_fragment.dart';
@@ -51,7 +53,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Future<bool> onBackPressed() {
-    if(stage == 2) {
+    if(stage == 3) {
+      GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
+    } else if(stage == 2) {
       setState(() {
         stage = 1;
       });
@@ -88,7 +92,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   CheckoutPaymentScreenHeader(
                     stage: stage,
                     onBackPressed: () {
-                      if(stage == 2) {
+                      if(stage == 3) {
+                        GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
+                      } else if(stage == 2) {
                         setState(() {
                           stage = 1;
                         });
@@ -106,7 +112,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     CheckoutFragment(
                       orderList: widget.orderList,
                     ) :
-                    stage == 1 ? CheckoutPaymentFragment(
+                    stage == 1 ?
+                    CheckoutPaymentFragment(
                       paymentMethod: paymentMethod,
                       onChangeMethod: (int method) {
                         setState(() {
@@ -114,6 +121,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         });
                       },
                     ) :
+                    stage == 2 ?
                     CheckoutDeliveryFragment(
                       isEditing: isEditing,
                       onPressed: () {
@@ -123,12 +131,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       },
                       receipentNameTEC: receipentNameTEC,
                       addressDetailTEC: addressTEC,
-                    ),
+                    ) :
+                    const CheckoutCompleteFragment(),
                   ),
                   widget.orderList.isNotEmpty ?
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      stage < 3 ?
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -154,18 +164,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                           ),
                         ],
-                      ),
+                      ) :
+                      const Material(),
                       GlobalElevatedButton(
                         onPressed: () {
-                          if(stage >= 0 && stage < 2) {
-                            setState(() {
-                              stage = stage + 1;
-                            });
+                          if(stage >= 0 && stage < 3) {
+                            if(stage != 2) {
+                              setState(() {
+                                stage = stage + 1;
+                              });
+                            } else {
+                              if(receipentNameTEC.text != '' && addressTEC.text != '') {
+                                setState(() {
+                                  stage = stage + 1;
+                                });
+                              } else {
+                                GlobalDialog(context: context, message: 'Cannot proceed, receipent and address must be filled').okDialog(() {
+
+                                });
+                              }
+                            }
                           } else {
-                            GlobalRoute(context: context).back(null);
+                            GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
                           }
                         },
-                        title: stage == 0 ? 'Proceed to Payment' : stage == 1 ? 'Proceed to Delivery' : 'Complete Payment',
+                        title: stage == 0 ? 'Proceed to Payment' : stage == 1 ? 'Proceed to Delivery' : stage == 2 ? 'Complete Payment' : 'Back To Main Menu',
                         btnColor: GlobalColor.accentColor,
                         padding: const GlobalPaddingClass(
                           paddingLeft: 50.0,

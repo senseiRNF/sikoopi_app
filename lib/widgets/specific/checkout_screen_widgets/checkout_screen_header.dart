@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
@@ -94,6 +93,8 @@ class CheckoutPaymentScreenHeader extends StatelessWidget {
             ),
           ],
         );
+      case 3:
+        return const Material();
       default:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -180,12 +181,23 @@ class CheckoutPaymentScreenHeader extends StatelessWidget {
               ),
             ],
           ),
+          stage != 3 ?
           GlobalText(
             content: 'Checkout',
             size: 24.0,
             color: GlobalColor.defaultWhite,
             isBold: true,
             align: TextAlign.center,
+          ) :
+          GlobalText(
+            content: 'Order Successful',
+            size: 28.0,
+            color: GlobalColor.defaultWhite,
+            isBold: true,
+            align: TextAlign.center,
+            padding: const GlobalPaddingClass(
+              paddingBottom: 30.0,
+            ),
           ),
           initTitle(),
         ],

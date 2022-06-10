@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class HistoryScreenHeader extends StatelessWidget {
-  const HistoryScreenHeader({Key? key}) : super(key: key);
+  final Function onBackPressed;
+
+  const HistoryScreenHeader({
+    Key? key,
+    required this.onBackPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class HistoryScreenHeader extends StatelessWidget {
                 content: Material(
                   color: Colors.transparent,
                   child: IconButton(
-                    onPressed: () => GlobalRoute(context: context).back(null),
+                    onPressed: () => onBackPressed(),
                     icon: Icon(
                       Icons.arrow_back,
                       color: GlobalColor.defaultWhite,

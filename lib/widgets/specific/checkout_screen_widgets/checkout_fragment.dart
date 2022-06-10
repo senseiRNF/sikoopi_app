@@ -27,7 +27,7 @@ class CheckoutFragment extends StatelessWidget {
         itemCount: orderList.length,
         itemBuilder: (BuildContext listContext, int index) {
           return CheckoutItem(
-            orderList: orderList[index],
+            orderItem: orderList[index],
           );
         },
       ) :

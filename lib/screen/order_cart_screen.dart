@@ -96,9 +96,9 @@ class _OrderCartScreen extends State<OrderCartScreen> {
                   onPressed: () {
                     GlobalRoute(context: context).moveTo(CheckoutScreen(
                       orderList: orderList,
-                    ), (callback) {
-                      if(callback != null && callback) {
-                        GlobalRoute(context: context).back(true);
+                    ), (List? callback) {
+                      if(callback != null && callback.isNotEmpty && callback[0]) {
+                        GlobalRoute(context: context).back([true, callback[1], callback[2], callback[3]]);
                       }
                     });
                   },
