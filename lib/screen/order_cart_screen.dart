@@ -38,8 +38,6 @@ class _OrderCartScreen extends State<OrderCartScreen> {
         });
       }
     }
-
-    widget.onChangeQty([0, 0]);
   }
 
   @override
@@ -67,7 +65,19 @@ class _OrderCartScreen extends State<OrderCartScreen> {
                     itemBuilder: (BuildContext listContext, int index) {
                       return OrderCartItem(
                         orderList: orderList[index],
-                        onChangeQty: (int qty) => widget.onChangeQty([index, qty]),
+                        onChangeQty: (int qty) {
+                          setState(() {
+                            orderList[index].totalQty = qty;
+                          });
+
+                          widget.onChangeQty([index, qty]);
+
+                          if(qty == 0) {
+                            setState(() {
+                              orderList.removeAt(index);
+                            });
+                          }
+                        },
                       );
                     },
                   ) :
@@ -87,7 +97,9 @@ class _OrderCartScreen extends State<OrderCartScreen> {
                     GlobalRoute(context: context).moveTo(CheckoutScreen(
                       orderList: orderList,
                     ), (callback) {
-
+                      if(callback != null && callback) {
+                        GlobalRoute(context: context).back(true);
+                      }
                     });
                   },
                   title: 'Complete Order',

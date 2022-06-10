@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
+import 'package:sikoopi_app/widgets/global_input_field.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/specific/profile_screen_widgets/profile_item.dart';
 import 'package:sikoopi_app/widgets/specific/profile_screen_widgets/profile_photo_item.dart';
@@ -15,6 +16,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreen extends State<ProfileScreen> {
+  bool isEditMode = false;
+
+  TextEditingController nameTEC = TextEditingController();
+  TextEditingController phoneTEC = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +69,36 @@ class _ProfileScreen extends State<ProfileScreen> {
                                   paddingLeft: 20.0,
                                   paddingRight: 20.0,
                                 ),
-                                content: Column(
+                                content: isEditMode ?
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    GlobalTextfield(
+                                      controller: nameTEC,
+                                      title: 'Name',
+                                    ),
+                                    GlobalTextfield(
+                                      controller: phoneTEC,
+                                      title: 'Phone',
+                                      inputType: TextInputType.phone,
+                                    ),
+                                    GlobalElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isEditMode = !isEditMode;
+                                        });
+                                      },
+                                      title: 'Save Profile',
+                                      titleColor: GlobalColor.defaultBlack,
+                                      btnColor: GlobalColor.defaultWhite,
+                                      padding: const GlobalPaddingClass(
+                                        paddingTop: 20.0,
+                                        paddingBottom: 10.0,
+                                      ),
+                                    ),
+                                  ],
+                                ) :
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     const ProfilePhotoItem(
@@ -85,15 +120,17 @@ class _ProfileScreen extends State<ProfileScreen> {
                                     ),
                                     GlobalElevatedButton(
                                       onPressed: () {
-
+                                        setState(() {
+                                          isEditMode = !isEditMode;
+                                        });
                                       },
-                                      title: GlobalString.editProfileText,
+                                      title: 'Edit Profile',
                                       titleColor: GlobalColor.defaultBlack,
                                       btnColor: GlobalColor.defaultWhite,
                                       padding: const GlobalPaddingClass(
                                         paddingBottom: 10.0,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),

@@ -13,5 +13,4 @@ class GlobalString {
   static String orderCartText = 'Order & Cart';
   static String checkoutText = 'Payment & Delivery';
   static String historyText = 'History';
-  static String editProfileText = 'Edit Profile';
 }

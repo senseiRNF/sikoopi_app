@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
+import 'package:sikoopi_app/widgets/global_button.dart';
+import 'package:sikoopi_app/widgets/global_input_field.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class CheckoutDeliveryFragment extends StatelessWidget {
-  const CheckoutDeliveryFragment({Key? key}) : super(key: key);
+  final bool isEditing;
+  final Function onPressed;
+  final TextEditingController receipentNameTEC;
+  final TextEditingController addressDetailTEC;
+
+  const CheckoutDeliveryFragment({
+    Key? key,
+    required this.isEditing,
+    required this.onPressed,
+    required this.receipentNameTEC,
+    required this.addressDetailTEC,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +31,73 @@ class CheckoutDeliveryFragment extends StatelessWidget {
       content: ListView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        children: [
+        children: isEditing ?
+        [
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0,),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: const [
-                GlobalText(
-                  content: 'Rendy Ashiha',
-                  size: 20.0,
-                  padding: GlobalPaddingClass(
+              children: [
+                GlobalTextfield(
+                  controller: receipentNameTEC,
+                  title: 'Receipent Name',
+                  capitalization: TextCapitalization.words,
+                  padding: const GlobalPaddingClass(
                     paddingLeft: 20.0,
                     paddingTop: 20.0,
                     paddingRight: 20.0,
                   ),
                 ),
-                GlobalPadding(
+                const GlobalPadding(
+                  paddingClass: GlobalPaddingClass(
+                    paddingLeft: 20.0,
+                    paddingRight: 20.0,
+                  ),
+                  content: Divider(
+                    thickness: 2.0,
+                  ),
+                ),
+                GlobalTextFormField(
+                  controller: addressDetailTEC,
+                  title: 'Address',
+                  capitalization: TextCapitalization.sentences,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 20.0,
+                    paddingTop: 5.0,
+                    paddingRight: 20.0,
+                    paddingBottom: 20.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GlobalElevatedButton(
+            title: 'Save Address Detail',
+            onPressed: () => onPressed(),
+            btnColor: GlobalColor.accentColor,
+          ),
+        ] :
+        [
+          receipentNameTEC.text != '' && addressDetailTEC.text != '' ?
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0,),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                GlobalText(
+                  content: receipentNameTEC.text,
+                  size: 20.0,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 20.0,
+                    paddingTop: 20.0,
+                    paddingRight: 20.0,
+                  ),
+                ),
+                const GlobalPadding(
                   paddingClass: GlobalPaddingClass(
                     paddingLeft: 20.0,
                     paddingRight: 20.0,
@@ -44,9 +107,9 @@ class CheckoutDeliveryFragment extends StatelessWidget {
                   ),
                 ),
                 GlobalText(
-                  content: 'Jalan Jatisari Raya Blok DU No.5, RT.005/RW.003, Jakasampurna, Kec. Bekasi Bar., Kota Bks, Jawa Barat 17145 \n\n08126545664',
+                  content: addressDetailTEC.text,
                   size: 16.0,
-                  padding: GlobalPaddingClass(
+                  padding: const GlobalPaddingClass(
                     paddingLeft: 20.0,
                     paddingTop: 5.0,
                     paddingRight: 20.0,
@@ -55,6 +118,51 @@ class CheckoutDeliveryFragment extends StatelessWidget {
                 ),
               ],
             ),
+          ) :
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0,),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                GlobalText(
+                  content: receipentNameTEC.text != '' ? receipentNameTEC.text : '(No Receiver)',
+                  size: 20.0,
+                  color: receipentNameTEC.text != '' ? GlobalColor.defaultBlack : GlobalColor.defaultRed,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 20.0,
+                    paddingTop: 20.0,
+                    paddingRight: 20.0,
+                  ),
+                ),
+                const GlobalPadding(
+                  paddingClass: GlobalPaddingClass(
+                    paddingLeft: 20.0,
+                    paddingRight: 20.0,
+                  ),
+                  content: Divider(
+                    thickness: 2.0,
+                  ),
+                ),
+                GlobalText(
+                  content: addressDetailTEC.text != '' ? addressDetailTEC.text : '(No Address)',
+                  size: 16.0,
+                  color: addressDetailTEC.text != '' ? GlobalColor.defaultBlack : GlobalColor.defaultRed,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 20.0,
+                    paddingTop: 5.0,
+                    paddingRight: 20.0,
+                    paddingBottom: 20.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GlobalElevatedButton(
+            title: 'Edit Address Detail',
+            onPressed: () => onPressed(),
+            btnColor: GlobalColor.accentColor,
           ),
         ],
       ),

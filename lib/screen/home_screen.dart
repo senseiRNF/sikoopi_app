@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
+import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/screen/order_cart_screen.dart';
+import 'package:sikoopi_app/widgets/global_padding.dart';
+import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_drawer.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_screen_header.dart';
@@ -20,7 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  List<CartClasses> orderList = [
+  List<CartClasses> cartItemList = [];
+  List<CartClasses> productDisplayList = [
     CartClasses(
       id: 1,
       name: 'Gula Rose Brand',
@@ -93,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _key,
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             HomeScreenHeader(
               onPressed: () {
@@ -101,10 +109,36 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: HomeFragment(
-                orderList: orderList,
-                onChangeQty: (List<int> updateQty) {
-                  setState(() {
-                    orderList[updateQty[0]].totalQty = updateQty[1];
+                productDisplayList: productDisplayList,
+                onPressed: (CartClasses selectedItem) {
+                  if(cartItemList.isEmpty) {
+                    setState(() {
+                      cartItemList.add(selectedItem);
+                      cartItemList[0].totalQty = 1;
+                    });
+                  } else {
+                    bool add = true;
+
+                    for(int i = 0; i < cartItemList.length; i++) {
+                      if(cartItemList[i].id == selectedItem.id) {
+                        add = false;
+
+                        setState(() {
+                          cartItemList[i].totalQty = cartItemList[i].totalQty + 1;
+                        });
+                      }
+                    }
+
+                    if(add) {
+                      setState(() {
+                        cartItemList.add(selectedItem);
+                        cartItemList[cartItemList.length - 1].totalQty = 1;
+                      });
+                    }
+                  }
+
+                  GlobalDialog(context: context, message: 'Success add to Cart').okDialog(() {
+
                   });
                 },
               ),
@@ -113,15 +147,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       endDrawer: HomeDrawer(
-        orderList: orderList,
-        onChangeQty: (List<int> updateQty) {
-          if(updateQty.isNotEmpty) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
-              setState(() {
-                orderList[updateQty[0]].totalQty = updateQty[1];
-              });
-            });
-          }
+        orderList: cartItemList,
+        onChangeQty: (List<int> qtyChange) {
+          setState(() {
+            if(qtyChange[1] == 0) {
+              cartItemList.removeAt(qtyChange[0]);
+            } else {
+              cartItemList[qtyChange[0]].totalQty = qtyChange[1];
+            }
+          });
+        },
+        callbackScreen: () {
+          setState(() {
+            cartItemList = [];
+          });
         },
       ),
     );

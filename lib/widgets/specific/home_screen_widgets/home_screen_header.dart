@@ -66,6 +66,7 @@ class HomeScreenHeader extends StatelessWidget {
               GlobalTextfield(
                 controller: searchTEC,
                 title: 'Search Product',
+                isBordered: true,
                 isFilled: true,
                 fieldColor: Colors.white54,
                 padding: const GlobalPaddingClass(

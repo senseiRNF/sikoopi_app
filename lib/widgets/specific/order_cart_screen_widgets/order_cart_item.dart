@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
@@ -73,8 +74,14 @@ class OrderCartItem extends StatelessWidget {
                               shape: const CircleBorder(),
                               child: InkWell(
                                 onTap: () {
-                                  if(orderList.totalQty > 0) {
+                                  if(orderList.totalQty > 1) {
                                     onChangeQty(orderList.totalQty - 1);
+                                  } else {
+                                    GlobalDialog(context: context, message: 'Remove item from Cart, are you sure?').optionDialog(() {
+                                      onChangeQty(0);
+                                    }, () {
+
+                                    });
                                   }
                                 },
                                 customBorder: const CircleBorder(),

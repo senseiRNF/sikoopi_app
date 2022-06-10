@@ -49,7 +49,6 @@ class GlobalTextfield extends StatelessWidget {
             borderSide: BorderSide(
               color: GlobalColor.defaultBlack,
             ),
-            borderRadius: BorderRadius.circular(50.0,),
           ),
           filled: isFilled != null && isFilled! ? true : false,
           fillColor: fieldColor ?? GlobalColor.defaultWhite,
@@ -103,13 +102,12 @@ class GlobalTextFormField extends StatelessWidget {
             borderSide: BorderSide(
               color: GlobalColor.defaultBlack,
             ),
-            borderRadius: BorderRadius.circular(50.0,),
+            borderRadius: BorderRadius.circular(10.0,),
           ) :
           UnderlineInputBorder(
             borderSide: BorderSide(
               color: GlobalColor.defaultBlack,
             ),
-            borderRadius: BorderRadius.circular(50.0,),
           ),
           filled: isFilled != null && isFilled! ? true : false,
           fillColor: fieldColor ?? GlobalColor.defaultWhite,

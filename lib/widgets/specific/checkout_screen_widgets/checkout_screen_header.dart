@@ -7,10 +7,12 @@ import 'package:sikoopi_app/widgets/global_text.dart';
 
 class CheckoutPaymentScreenHeader extends StatelessWidget {
   final int stage;
+  final Function onBackPressed;
 
   const CheckoutPaymentScreenHeader({
     Key? key,
     required this.stage,
+    required this.onBackPressed,
   }) : super(key: key);
 
   Widget initTitle() {
@@ -146,7 +148,9 @@ class CheckoutPaymentScreenHeader extends StatelessWidget {
                 content: Material(
                   color: Colors.transparent,
                   child: IconButton(
-                    onPressed: () => GlobalRoute(context: context).back(null),
+                    onPressed: () {
+                      onBackPressed();
+                    },
                     icon: Icon(
                       Icons.arrow_back,
                       color: GlobalColor.defaultWhite,

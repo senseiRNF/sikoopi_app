@@ -14,11 +14,13 @@ import 'package:sikoopi_app/widgets/specific/home_screen_widgets/drawer_item.dar
 class HomeDrawer extends StatelessWidget {
   final List<CartClasses> orderList;
   final Function onChangeQty;
+  final Function callbackScreen;
 
   const HomeDrawer({
     Key? key,
     required this.orderList,
     required this.onChangeQty,
+    required this.callbackScreen,
   }) : super(key: key);
 
   @override
@@ -70,9 +72,13 @@ class HomeDrawer extends StatelessWidget {
 
                             GlobalRoute(context: context).moveTo(OrderCartScreen(
                               orderList: orderList,
-                              onChangeQty: (List<int> updateQty) => onChangeQty(updateQty),
+                              onChangeQty: (List<int> qtyChange) {
+                                onChangeQty(qtyChange);
+                              },
                             ), (callback) {
-
+                              if(callback != null && callback) {
+                                callbackScreen();
+                              }
                             });
                           },
                         ),
