@@ -27,8 +27,9 @@ class MainApp extends StatelessWidget {
           backgroundColor: GlobalColor.primaryColor,
           titleTextStyle: TextStyle(
             color: GlobalColor.defaultWhite,
-          )
+          ),
         ),
+        fontFamily: 'Lato',
       ),
       routes: {
         '/': (context) => const SplashScreen(),

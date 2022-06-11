@@ -30,6 +30,9 @@ class GlobalElevatedButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           primary: btnColor ?? GlobalColor.primaryColor,
           elevation: 10.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40.0,),
+          ),
         ),
         child: GlobalText(
           content: title,
@@ -37,9 +40,9 @@ class GlobalElevatedButton extends StatelessWidget {
           color: titleColor ?? GlobalColor.defaultWhite,
           padding: const GlobalPaddingClass(
             paddingLeft: 10.0,
-            paddingTop: 10.0,
+            paddingTop: 15.0,
             paddingRight: 10.0,
-            paddingBottom: 10.0,
+            paddingBottom: 15.0,
           ),
         ),
       ),

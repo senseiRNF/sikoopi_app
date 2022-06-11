@@ -30,7 +30,7 @@ class GlobalDialog {
           actions: [
             TextButton(
               onPressed: () {
-                GlobalRoute(context: context).back(true);
+                GlobalRoute(context: context).back(null);
               },
               child: const Text(
                 'OK',
@@ -39,7 +39,7 @@ class GlobalDialog {
           ],
         );
       },
-    ).then((result) {
+    ).then((_) {
       callback();
     });
   }
