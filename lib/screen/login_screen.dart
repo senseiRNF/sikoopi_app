@@ -13,6 +13,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   int selectedMenu = 0;
 
+  TextEditingController loginEmailTEC = TextEditingController();
+  TextEditingController loginPassTEC = TextEditingController();
+
+  TextEditingController signUpNameTEC = TextEditingController();
+  TextEditingController signUpPhoneTEC = TextEditingController();
+  TextEditingController signUpEmailTEC = TextEditingController();
+  TextEditingController signUpPassTEC = TextEditingController();
+  TextEditingController signUpConfPassTEC = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -36,8 +45,17 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             selectedMenu == 0 ?
-            const LoginFragment() :
-            const SignUpFragment(),
+            LoginFragment(
+              emailTEC: loginEmailTEC,
+              passTEC: loginPassTEC,
+            ) :
+            SignUpFragment(
+              nameTEC: signUpNameTEC,
+              phoneTEC: signUpPhoneTEC,
+              emailTEC: signUpEmailTEC,
+              passTEC: signUpPassTEC,
+              confPassTEC: signUpConfPassTEC,
+            ),
           ],
         ),
       ),

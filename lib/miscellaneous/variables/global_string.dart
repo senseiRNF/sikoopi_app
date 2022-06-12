@@ -13,4 +13,7 @@ class GlobalString {
   static String orderCartText = 'Order & Cart';
   static String checkoutText = 'Payment & Delivery';
   static String historyText = 'History';
+
+  // Key String
+  static String keyAuthorization = 'AUTH';
 }

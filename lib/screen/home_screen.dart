@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_drawer.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_screen_header.dart';
@@ -20,9 +22,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int orderCounter = 0;
 
+  String? role;
+
   @override
   void initState() {
     super.initState();
+
+    initLoad();
+  }
+
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((AuthorizationClasses? auth) {
+      if(auth != null) {
+        setState(() {
+          role = auth.role;
+        });
+      }
+    });
   }
 
   List<CartClasses> cartItemList = [];
@@ -108,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             Expanded(
-              child: HomeFragment(
+              child: UserHomeFragment(
                 productDisplayList: productDisplayList,
                 onPressed: (CartClasses selectedItem) {
                   if(cartItemList.isEmpty) {
@@ -146,7 +162,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      endDrawer: HomeDrawer(
+      endDrawer: role != null && role == 'admin' ?
+      const AdminHomeDrawer() :
+      UserHomeDrawer(
         orderList: cartItemList,
         historyList: historyItemList,
         onChangeQty: (List<int> qtyChange) {

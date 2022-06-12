@@ -1,23 +1,32 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
+import 'package:sikoopi_app/screen/home_screen.dart';
+import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_input_field.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class SignUpFragment extends StatelessWidget {
-  const SignUpFragment({Key? key}) : super(key: key);
+  final TextEditingController nameTEC;
+  final TextEditingController phoneTEC;
+  final TextEditingController emailTEC;
+  final TextEditingController passTEC;
+  final TextEditingController confPassTEC;
+
+  const SignUpFragment({
+    Key? key,
+    required this.nameTEC,
+    required this.phoneTEC,
+    required this.emailTEC,
+    required this.passTEC,
+    required this.confPassTEC,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameTEC = TextEditingController();
-    TextEditingController phoneTEC = TextEditingController();
-    TextEditingController emailTEC = TextEditingController();
-    TextEditingController passTEC = TextEditingController();
-    TextEditingController confPassTEC = TextEditingController();
-
     return ListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -75,9 +84,19 @@ class SignUpFragment extends StatelessWidget {
           ),
         ),
         GlobalElevatedButton(
-          onPressed: () {
-            log(emailTEC.text);
-            log(passTEC.text);
+          onPressed: () async {
+            await SharedPref().writeAuthorization(
+              AuthorizationClasses(
+                username: 'Test Account',
+                phoneNo: '0123456789',
+                email: 'testaccount@gmail.com',
+                role: 'user',
+              ),
+            ).then((result) {
+              if(result) {
+                GlobalRoute(context: context).replaceWith(const HomeScreen());
+              }
+            });
           },
           title: 'Sign Up',
           titleSize: 18.0,
