@@ -5,10 +5,12 @@ import 'package:sikoopi_app/widgets/global_input_field.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 
 class HomeScreenHeader extends StatelessWidget {
+  final String role;
   final Function onPressed;
 
   const HomeScreenHeader({
     Key? key,
+    required this.role,
     required this.onPressed,
   }) : super(key: key);
 
@@ -41,6 +43,44 @@ class HomeScreenHeader extends StatelessWidget {
               ),
             ],
           ),
+          role == 'admin' ?
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const SizedBox(
+                height: 50.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    '${GlobalString.assetImagePath}/bps_jateng_icon.png',
+                    width: MediaQuery.of(context).size.width / 2,
+                  ),
+                  const SizedBox(
+                    width: 20.0,
+                  ),
+                  Image.asset(
+                    '${GlobalString.assetImagePath}/sikoopi_icon.png',
+                    height: MediaQuery.of(context).size.height / 8,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 60.0,
+              ),
+              Container(
+                height: 40.0,
+                decoration: BoxDecoration(
+                  color: GlobalColor.defaultWhite,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(40.0,),
+                    topRight: Radius.circular(40.0,),
+                  ),
+                ),
+              )
+            ],
+          ) :
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

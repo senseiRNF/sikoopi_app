@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
-import 'package:sikoopi_app/widgets/specific/home_screen_widgets/product_display_item.dart';
+import 'package:sikoopi_app/widgets/global_button.dart';
+import 'package:sikoopi_app/widgets/global_padding.dart';
+import 'package:sikoopi_app/widgets/specific/product_screen_widgets/product_item.dart';
 import 'package:sikoopi_app/widgets/specific/product_screen_widgets/product_screen_header.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -13,7 +16,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
 
-  List<CartClasses> productDisplayList = [
+  List<CartClasses> productList = [
     CartClasses(
       id: 1,
       name: 'Gula Rose Brand',
@@ -108,15 +111,28 @@ class _ProductScreenState extends State<ProductScreen> {
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                     ),
-                    itemCount: productDisplayList.length,
+                    itemCount: productList.length,
                     itemBuilder: (BuildContext gridContext, int index) {
-                      return ProductDisplayItem(
-                        orderList: productDisplayList[index],
+                      return ProductItem(
+                        orderList: productList[index],
                         onPressed: () => () {
 
                         },
                       );
                     },
+                  ),
+                ),
+                GlobalElevatedButton(
+                  onPressed: () {
+
+                  },
+                  title: 'Add New Product',
+                  btnColor: GlobalColor.accentColor,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 50.0,
+                    paddingTop: 10.0,
+                    paddingRight: 50.0,
+                    paddingBottom: 10.0,
                   ),
                 ),
               ],
