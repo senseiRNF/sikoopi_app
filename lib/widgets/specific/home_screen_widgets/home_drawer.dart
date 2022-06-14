@@ -7,6 +7,7 @@ import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/screen/history_screen.dart';
 import 'package:sikoopi_app/screen/order_cart_screen.dart';
+import 'package:sikoopi_app/screen/product_screen.dart';
 import 'package:sikoopi_app/screen/profile_screen.dart';
 import 'package:sikoopi_app/screen/splash_screen.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
@@ -151,7 +152,7 @@ class UserHomeDrawer extends StatelessWidget {
 }
 
 class AdminHomeDrawer extends StatelessWidget {
-  const AdminHomeDrawer({Key? key}) : super(key: key);
+  const AdminHomeDrawer({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +192,9 @@ class AdminHomeDrawer extends StatelessWidget {
                           iconPath: 'product_icon.png',
                           title: GlobalString.productText,
                           onPressed: () {
+                            GlobalRoute(context: context).moveTo(const ProductScreen(), (callback) {
 
+                            });
                           },
                         ),
                       ],

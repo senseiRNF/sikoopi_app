@@ -69,18 +69,33 @@ class LoginFragment extends StatelessWidget {
         ),
         GlobalElevatedButton(
           onPressed: () async {
-            await SharedPref().writeAuthorization(
-              AuthorizationClasses(
-                username: 'Test Account',
-                phoneNo: '0123456789',
-                email: 'testaccount@gmail.com',
-                role: 'user',
-              ),
-            ).then((result) {
-              if(result) {
-                GlobalRoute(context: context).replaceWith(const HomeScreen());
-              }
-            });
+            if(emailTEC.text == 'admin') {
+              await SharedPref().writeAuthorization(
+                AuthorizationClasses(
+                  username: 'Test Account',
+                  phoneNo: '0123456789',
+                  email: 'testaccount@gmail.com',
+                  role: 'admin',
+                ),
+              ).then((result) {
+                if(result) {
+                  GlobalRoute(context: context).replaceWith(const HomeScreen());
+                }
+              });
+            } else {
+              await SharedPref().writeAuthorization(
+                AuthorizationClasses(
+                  username: 'Test Account',
+                  phoneNo: '0123456789',
+                  email: 'testaccount@gmail.com',
+                  role: 'user',
+                ),
+              ).then((result) {
+                if(result) {
+                  GlobalRoute(context: context).replaceWith(const HomeScreen());
+                }
+              });
+            }
           },
           title: 'Login',
           titleSize: 18.0,
