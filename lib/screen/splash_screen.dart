@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
@@ -24,8 +24,8 @@ class _SplashScreen extends State<SplashScreen> {
   }
 
   void initLoad() async {
-    await SharedPref().readAuthorization().then((AuthorizationClasses? auth) {
-      if(auth != null) {
+    await SharedPref().readAuthorization().then((UserClasses? user) {
+      if(user != null) {
         Future.delayed(const Duration(seconds: 2), () {
           GlobalRoute(context: context).replaceWith(const HomeScreen());
         });

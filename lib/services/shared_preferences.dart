@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 
 class SharedPref {
@@ -9,17 +9,17 @@ class SharedPref {
     return sharedPreferences;
   }
 
-  Future<bool> writeAuthorization(AuthorizationClasses auth) async {
+  Future<bool> writeAuthorization(UserClasses user) async {
     bool result = false;
 
     await init().then((sharedPrefs) async {
       await sharedPrefs.setStringList(
         GlobalString.keyAuthorization,
         [
-          auth.username,
-          auth.phoneNo,
-          auth.email,
-          auth.role,
+          user.username,
+          user.phoneNo,
+          user.email,
+          user.role,
         ],
       ).then((_) {
         result = true;
@@ -29,14 +29,14 @@ class SharedPref {
     return result;
   }
 
-  Future<AuthorizationClasses?> readAuthorization() async {
-    AuthorizationClasses? result;
+  Future<UserClasses?> readAuthorization() async {
+    UserClasses? result;
 
     await init().then((sharedPrefs) async {
       List<String>? authList = sharedPrefs.getStringList(GlobalString.keyAuthorization);
 
       if(authList != null) {
-        result = AuthorizationClasses(
+        result = UserClasses(
           username: authList[0],
           phoneNo: authList[1],
           email: authList[2],

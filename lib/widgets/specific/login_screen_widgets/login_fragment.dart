@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/screen/home_screen.dart';
@@ -71,7 +71,7 @@ class LoginFragment extends StatelessWidget {
           onPressed: () async {
             if(emailTEC.text == 'admin') {
               await SharedPref().writeAuthorization(
-                AuthorizationClasses(
+                UserClasses(
                   username: 'Test Account',
                   phoneNo: '0123456789',
                   email: 'testaccount@gmail.com',
@@ -84,7 +84,7 @@ class LoginFragment extends StatelessWidget {
               });
             } else {
               await SharedPref().writeAuthorization(
-                AuthorizationClasses(
+                UserClasses(
                   username: 'Test Account',
                   phoneNo: '0123456789',
                   email: 'testaccount@gmail.com',

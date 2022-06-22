@@ -1,17 +1,17 @@
-class CartClasses {
-  int id;
+class ProductClasses {
+  int? id;
   String name;
   String uom;
   int price;
   String imagePath;
-  int totalQty;
-
-  CartClasses({
-    required this.id,
+  bool isActive;
+  
+  ProductClasses({
+    this.id,
     required this.name,
     required this.uom,
     required this.price,
     required this.imagePath,
-    required this.totalQty,
+    required this.isActive,
   });
 }

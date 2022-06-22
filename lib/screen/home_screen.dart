@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/order_classes.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
@@ -33,10 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void initLoad() async {
-    await SharedPref().readAuthorization().then((AuthorizationClasses? auth) {
-      if(auth != null) {
+    await SharedPref().readAuthorization().then((UserClasses? user) {
+      if(user != null) {
         setState(() {
-          role = auth.role;
+          role = user.role;
         });
       }
     });
@@ -253,7 +253,6 @@ class _HomeScreenState extends State<HomeScreen> {
       endDrawer: role != null && role == 'admin' ?
       const AdminHomeDrawer() :
       UserHomeDrawer(
-      endDrawer: HomeDrawer(
         orderList: cartItemList,
         historyList: historyItemList,
         onChangeQty: (List<int> qtyChange) {
