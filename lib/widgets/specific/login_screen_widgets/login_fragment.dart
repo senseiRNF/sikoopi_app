@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/screen/home_screen.dart';
+import 'package:sikoopi_app/services/local_db.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_input_field.dart';
@@ -69,30 +71,30 @@ class LoginFragment extends StatelessWidget {
         ),
         GlobalElevatedButton(
           onPressed: () async {
-            if(emailTEC.text == 'admin') {
-              await SharedPref().writeAuthorization(
-                UserClasses(
-                  username: 'Test Account',
-                  phoneNo: '0123456789',
-                  email: 'testaccount@gmail.com',
-                  role: 'admin',
-                ),
-              ).then((result) {
-                if(result) {
-                  GlobalRoute(context: context).replaceWith(const HomeScreen());
-                }
-              });
-            } else {
-              await SharedPref().writeAuthorization(
-                UserClasses(
-                  username: 'Test Account',
-                  phoneNo: '0123456789',
-                  email: 'testaccount@gmail.com',
-                  role: 'user',
-                ),
-              ).then((result) {
-                if(result) {
-                  GlobalRoute(context: context).replaceWith(const HomeScreen());
+            if(emailTEC.text != '' && passTEC.text != '') {
+              await LocalDB().readLoginUser(emailTEC.text, passTEC.text).then((loginResult) async {
+                if(loginResult != null) {
+                  await SharedPref().writeAuthorization(
+                    UserClasses(
+                      id: loginResult.id,
+                      username: loginResult.username,
+                      phoneNo: loginResult.phoneNo,
+                      email: loginResult.email,
+                      role: loginResult.role,
+                    ),
+                  ).then((authResult) {
+                    if(authResult) {
+                      GlobalRoute(context: context).replaceWith(const HomeScreen());
+                    } else {
+                      GlobalDialog(context: context, message: 'Failed to Login, please check your email or password and then try again').okDialog(() {
+
+                      });
+                    }
+                  });
+                } else {
+                  GlobalDialog(context: context, message: 'Failed to Login, please check your email or password and then try again').okDialog(() {
+
+                  });
                 }
               });
             }

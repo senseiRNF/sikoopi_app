@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
@@ -17,16 +16,12 @@ import 'package:sikoopi_app/widgets/specific/home_screen_widgets/drawer_item.dar
 
 class UserHomeDrawer extends StatelessWidget {
   final List<CartClasses> orderList;
-  final List<HistoryClasses> historyList;
   final Function onChangeQty;
-  final Function callbackScreen;
 
   const UserHomeDrawer({
     Key? key,
     required this.orderList,
-    required this.historyList,
     required this.onChangeQty,
-    required this.callbackScreen,
   }) : super(key: key);
 
   @override
@@ -74,10 +69,8 @@ class UserHomeDrawer extends StatelessWidget {
                               onChangeQty: (List<int> qtyChange) {
                                 onChangeQty(qtyChange);
                               },
-                            ), (List? callback) {
-                              if(callback != null && callback.isNotEmpty && callback[0]) {
-                                callbackScreen(callback[1], callback[2], callback[3]);
-                              }
+                            ), (callback) {
+
                             });
                           },
                         ),
@@ -87,9 +80,7 @@ class UserHomeDrawer extends StatelessWidget {
                           onPressed: () {
                             GlobalRoute(context: context).back(null);
 
-                            GlobalRoute(context: context).moveTo(HistoryScreen(
-                              historyList: historyList,
-                            ), (callback) {
+                            GlobalRoute(context: context).moveTo(const HistoryScreen(), (callback) {
 
                             });
                           },

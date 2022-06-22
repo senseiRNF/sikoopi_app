@@ -1,39 +1,39 @@
 class ActiveOrderClass {
-  String orderCode;
-  DateTime date;
-  List<DetailActiveOrderClass> detailOrder;
-  int total;
-  String paymentMethod;
+  String? orderCode;
+  DateTime? date;
+  List<DetailActiveOrderClass>? detailOrder;
+  int? total;
+  String? paymentMethod;
   String? receipent;
   String? address;
-  bool status;
+  bool? status;
 
   ActiveOrderClass({
-    required this.orderCode,
-    required this.date,
-    required this.detailOrder,
-    required this.total,
-    required this.paymentMethod,
+    this.orderCode,
+    this.date,
+    this.detailOrder,
+    this.total,
+    this.paymentMethod,
     this.receipent,
     this.address,
-    required this.status,
+    this.status,
   });
 }
 
 class DetailActiveOrderClass {
-  String productName;
-  String productUOM;
-  int productPrice;
-  String imgPath;
-  int qty;
-  int subtotal;
+  String? productName;
+  String? productUOM;
+  int? productPrice;
+  String? imgPath;
+  int? qty;
+  int? subtotal;
 
   DetailActiveOrderClass({
-    required this.productName,
-    required this.productUOM,
-    required this.productPrice,
-    required this.imgPath,
-    required this.qty,
-    required this.subtotal
+    this.productName,
+    this.productUOM,
+    this.productPrice,
+    this.imgPath,
+    this.qty,
+    this.subtotal
   });
 }

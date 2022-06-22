@@ -84,7 +84,7 @@ class CheckoutPaymentFragment extends StatelessWidget {
                 paddingBottom: 20.0,
               ),
               content: GlobalText(
-                content: 'Bank:\nBCA 4060988400 - a.n Razy Novianrizki F',
+                content: 'Bank:\n"Example Bank" "Example Account No" - a.n "Example Account Name"',
                 size: 16.0,
               ),
             ),

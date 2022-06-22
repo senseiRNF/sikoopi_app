@@ -40,18 +40,18 @@ class ProductItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Image.asset(
-                  orderList.imagePath,
+                  orderList.imagePath ?? '',
                   fit: BoxFit.contain,
                 ),
               ),
               GlobalText(
-                content: orderList.name,
+                content: orderList.name ?? 'Unkonwn Name',
                 size: 16.0,
                 isBold: true,
                 align: TextAlign.center,
               ),
               GlobalText(
-                content: orderList.uom,
+                content: orderList.uom ?? 'Unknown UOM',
                 align: TextAlign.center,
               ),
               GlobalText(

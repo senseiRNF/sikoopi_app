@@ -32,7 +32,7 @@ class DetailOrderItem extends StatelessWidget {
                 paddingBottom: 10.0,
               ),
               content: Image.asset(
-                orderItem.imgPath,
+                orderItem.imgPath ?? '',
                 fit: BoxFit.contain,
               ),
             ),
@@ -47,13 +47,13 @@ class DetailOrderItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GlobalText(
-                    content: orderItem.productName,
+                    content: orderItem.productName ?? 'Unknown Name',
                     size: 16.0,
                     isBold: true,
                     align: TextAlign.center,
                   ),
                   GlobalText(
-                    content: orderItem.productUOM,
+                    content: orderItem.productUOM ?? 'Unknown UOM',
                     align: TextAlign.center,
                   ),
                   GlobalText(
@@ -74,7 +74,7 @@ class DetailOrderItem extends StatelessWidget {
                       ),
                       Expanded(
                         child: GlobalText(
-                          content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.qty * orderItem.productPrice).replaceAll(',', '.')},-",
+                          content: orderItem.qty != null && orderItem.productPrice != null ? "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.qty! * orderItem.productPrice!).replaceAll(',', '.')},-" : 'Unknown Total',
                           size: 14.0,
                           align: TextAlign.center,
                         ),

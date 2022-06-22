@@ -32,7 +32,7 @@ class _OrderCartScreen extends State<OrderCartScreen> {
     super.initState();
 
     for(int i = 0; i < widget.orderList.length; i++) {
-      if(widget.orderList[i].totalQty > 0) {
+      if(widget.orderList[i].totalQty != null && widget.orderList[i].totalQty! > 0) {
         setState(() {
           orderList.add(widget.orderList[i]);
         });

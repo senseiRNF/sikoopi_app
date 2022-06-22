@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_item.dart';
 
 class HistoryFragment extends StatelessWidget {
-  final List<HistoryClasses> historyList;
+  final List<TransactionClasses> transactionList;
   final Function onPressed;
 
   const HistoryFragment({
     Key? key,
-    required this.historyList,
+    required this.transactionList,
     required this.onPressed,
   }) : super(key: key);
 
@@ -24,13 +24,17 @@ class HistoryFragment extends StatelessWidget {
         paddingRight: 10.0,
         paddingBottom: 10.0,
       ),
-      content: historyList.isNotEmpty ?
+      content: transactionList.isNotEmpty ?
       ListView.builder(
-        itemCount: historyList.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: transactionList.length,
         itemBuilder: (BuildContext listContext, int index) {
           return HistoryItem(
-            historyItem: historyList[index],
-            onPressed: (HistoryClasses historyItem) => onPressed(historyItem),
+            transactionItem: transactionList[index],
+            onPressed: (TransactionClasses? transactionItem) {
+              onPressed(transactionItem);
+            },
           );
         },
       ) :

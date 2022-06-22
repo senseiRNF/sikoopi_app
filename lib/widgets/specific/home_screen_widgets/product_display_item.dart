@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class ProductDisplayItem extends StatelessWidget {
-  final CartClasses orderList;
+  final ProductClasses productList;
   final Function onPressed;
   
   const ProductDisplayItem({
     Key? key,
-    required this.orderList,
+    required this.productList,
     required this.onPressed,
   }) : super(key: key);
 
@@ -33,22 +33,22 @@ class ProductDisplayItem extends StatelessWidget {
           children: [
             Expanded(
               child: Image.asset(
-                orderList.imagePath,
+                productList.imagePath ?? '',
                 fit: BoxFit.contain,
               ),
             ),
             GlobalText(
-              content: orderList.name,
+              content: productList.name ?? 'Unknown',
               size: 16.0,
               isBold: true,
               align: TextAlign.center,
             ),
             GlobalText(
-              content: orderList.uom,
+              content: productList.uom ?? 'Unknown',
               align: TextAlign.center,
             ),
             GlobalText(
-              content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderList.price).replaceAll(',', '.')},-",
+              content: "Rp.${NumberFormat('#,###', 'en_ID').format(productList.price ?? 0).replaceAll(',', '.')},-",
               align: TextAlign.center,
               padding: const GlobalPaddingClass(
                 paddingBottom: 10.0,

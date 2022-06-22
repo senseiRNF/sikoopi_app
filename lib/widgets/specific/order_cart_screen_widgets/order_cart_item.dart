@@ -35,7 +35,7 @@ class OrderCartItem extends StatelessWidget {
                 paddingBottom: 10.0,
               ),
               content: Image.asset(
-                orderList.imagePath,
+                orderList.imagePath ?? '',
                 fit: BoxFit.contain,
               ),
             ),
@@ -45,13 +45,13 @@ class OrderCartItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GlobalText(
-                  content: orderList.name,
+                  content: orderList.name ?? 'Unknown Name',
                   size: 18.0,
                   isBold: true,
                   align: TextAlign.center,
                 ),
                 GlobalText(
-                  content: orderList.uom,
+                  content: orderList.uom ?? 'Unknown UOM',
                   size: 16.0,
                   align: TextAlign.center,
                 ),
@@ -74,8 +74,8 @@ class OrderCartItem extends StatelessWidget {
                               shape: const CircleBorder(),
                               child: InkWell(
                                 onTap: () {
-                                  if(orderList.totalQty > 1) {
-                                    onChangeQty(orderList.totalQty - 1);
+                                  if(orderList.totalQty != null && orderList.totalQty! > 1) {
+                                    onChangeQty(orderList.totalQty! - 1);
                                   } else {
                                     GlobalDialog(context: context, message: 'Remove item from Cart, are you sure?').optionDialog(() {
                                       onChangeQty(0);
@@ -111,7 +111,9 @@ class OrderCartItem extends StatelessWidget {
                               shape: const CircleBorder(),
                               child: InkWell(
                                 onTap: () {
-                                  onChangeQty(orderList.totalQty + 1);
+                                  if(orderList.totalQty != null) {
+                                    onChangeQty(orderList.totalQty! + 1);
+                                  }
                                 },
                                 customBorder: const CircleBorder(),
                                 child: const GlobalPadding(
@@ -133,7 +135,7 @@ class OrderCartItem extends StatelessWidget {
                     ),
                     Expanded(
                       child: GlobalText(
-                        content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderList.totalQty * orderList.price).replaceAll(',', '.')},-",
+                        content: orderList.totalQty != null && orderList.price != null ? "Rp.${NumberFormat('#,###', 'en_ID').format(orderList.totalQty! * orderList.price!).replaceAll(',', '.')},-" : 'Unknown Total',
                         size: 16.0,
                         align: TextAlign.center,
                       ),

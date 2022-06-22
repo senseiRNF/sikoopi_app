@@ -16,10 +16,11 @@ class SharedPref {
       await sharedPrefs.setStringList(
         GlobalString.keyAuthorization,
         [
-          user.username,
-          user.phoneNo,
-          user.email,
-          user.role,
+          user.id.toString(),
+          user.username ?? 'Unknown Name',
+          user.phoneNo ?? 'Unknown Phone',
+          user.email ?? 'Unknown Email',
+          user.role ?? 'Unknown Role',
         ],
       ).then((_) {
         result = true;
@@ -37,10 +38,11 @@ class SharedPref {
 
       if(authList != null) {
         result = UserClasses(
-          username: authList[0],
-          phoneNo: authList[1],
-          email: authList[2],
-          role: authList[3],
+          id: int.parse(authList[0]),
+          username: authList[1],
+          phoneNo: authList[2],
+          email: authList[3],
+          role: authList[4],
         );
       }
     });

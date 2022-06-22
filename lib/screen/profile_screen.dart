@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_input_field.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
@@ -18,12 +21,33 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreen extends State<ProfileScreen> {
   bool isEditMode = false;
 
-  TextEditingController nameTEC = TextEditingController(text: 'Rany Ashisa');
-  TextEditingController phoneTEC = TextEditingController(text: '08126545664');
+  int? userId;
+
+  TextEditingController nameTEC = TextEditingController();
+  TextEditingController phoneTEC = TextEditingController();
+
+  String? email;
+  String? role;
 
   @override
   void initState() {
     super.initState();
+
+    initLoad();
+  }
+
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((result) {
+      if(result != null) {
+        setState(() {
+          userId = result.id;
+          nameTEC.text = result.username ?? 'Unknown Name';
+          phoneTEC.text = result.phoneNo ?? 'Unknown Phone';
+          email = result.email ?? 'Unknown Email';
+          role = result.role ?? 'user';
+        });
+      }
+    });
   }
 
   @override
@@ -84,9 +108,31 @@ class _ProfileScreen extends State<ProfileScreen> {
                                       inputType: TextInputType.phone,
                                     ),
                                     GlobalElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isEditMode = !isEditMode;
+                                      onPressed: () async {
+                                        await LocalDB().updateUser(
+                                          UserClasses(
+                                            id: userId,
+                                            username: nameTEC.text,
+                                            phoneNo: phoneTEC.text,
+                                          ),
+                                        ).then((result) async {
+                                          if(result) {
+                                            await SharedPref().writeAuthorization(
+                                              UserClasses(
+                                                id: userId,
+                                                username: nameTEC.text,
+                                                phoneNo: phoneTEC.text,
+                                                email: email,
+                                                role: role,
+                                              ),
+                                            ).then((writeResult) {
+                                              if(writeResult) {
+                                                setState(() {
+                                                  isEditMode = !isEditMode;
+                                                });
+                                              }
+                                            });
+                                          }
                                         });
                                       },
                                       title: 'Save Profile',
@@ -103,7 +149,6 @@ class _ProfileScreen extends State<ProfileScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     ProfilePhotoItem(
-                                      urlPhoto: 'https://ami.animecharactersdatabase.com/uploads/chars/5457-1000260068.jpg',
                                       name: nameTEC.text,
                                       phoneNo: phoneTEC.text,
                                     ),
@@ -115,9 +160,9 @@ class _ProfileScreen extends State<ProfileScreen> {
                                       iconPath: 'phone_no_icon.png',
                                       title: phoneTEC.text,
                                     ),
-                                    const ProfileItem(
+                                    ProfileItem(
                                       iconPath: 'email_icon.png',
-                                      title: 'ranyashiha@gmail.com',
+                                      title: email ?? 'Unknown Email',
                                     ),
                                     GlobalElevatedButton(
                                       onPressed: () {

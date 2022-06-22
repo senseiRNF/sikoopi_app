@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
@@ -23,42 +24,10 @@ class ProfilePhotoItem extends StatelessWidget {
       ),
       content: Row(
         children: [
-          SizedBox(
-            width: 80.0,
-            height: 80.0,
-            child: Image.network(
-              urlPhoto ?? '',
-              loadingBuilder: (BuildContext imgContext, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          urlPhoto ?? '',
-                        ),
-                      )
-                    ),
-                  );
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-              errorBuilder: (BuildContext errContext, obj, stackTrace) {
-                return const Center(
-                  child: Icon(
-                    Icons.account_circle,
-                    size: 60.0,
-                  ),
-                );
-              },
-            ),
+          Icon(
+            Icons.account_circle,
+            size: 80.0,
+            color: GlobalColor.defaultBlue,
           ),
           Expanded(
             child: Column(

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
@@ -29,15 +32,31 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   int stage = 0;
   int paymentMethod = 0;
+  int? userId;
 
   TextEditingController receipentNameTEC = TextEditingController();
   TextEditingController addressTEC = TextEditingController();
 
   bool isEditing = false;
 
+  String? username;
+
   @override
   void initState() {
     super.initState();
+
+    initLoad();
+  }
+
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((result) {
+      if(result != null) {
+        setState(() {
+          userId = result.id;
+          username = result.username;
+        });
+      }
+    });
   }
 
   int countTotal() {
@@ -45,7 +64,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     if(widget.orderList.isNotEmpty) {
       for(int i = 0; i < widget.orderList.length; i++) {
-        result = result + (widget.orderList[i].totalQty * widget.orderList[i].price);
+        if(widget.orderList[i].totalQty != null && widget.orderList[i].price != null) {
+          result = result + (widget.orderList[i].totalQty! * widget.orderList[i].price!);
+        }
       }
     }
 
@@ -167,28 +188,73 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ) :
                       const Material(),
                       GlobalElevatedButton(
-                        onPressed: () {
-                          if(stage >= 0 && stage < 3) {
-                            if(stage != 2) {
+                        onPressed: () async {
+                          switch(stage) {
+                            case 0:
                               setState(() {
                                 stage = stage + 1;
                               });
-                            } else {
-                              if(receipentNameTEC.text != '' && addressTEC.text != '') {
+                              break;
+                            case 1:
+                              if(paymentMethod == 0) {
+                                await LocalDB().writeTransactions(
+                                  TransactionClasses(
+                                    userId: userId,
+                                    username: username ?? 'Unknown User',
+                                    date: DateTime.now(),
+                                    total: countTotal(),
+                                    payment: 'cash',
+                                    receipent: '',
+                                    address: '',
+                                  ),
+                                  widget.orderList,
+                                ).then((result) {
+                                  if(result) {
+                                    setState(() {
+                                      stage = stage + 2;
+                                    });
+                                  }
+                                });
+                              } else {
                                 setState(() {
                                   stage = stage + 1;
+                                });
+                              }
+                              break;
+                            case 2:
+                              if(receipentNameTEC.text != '' && addressTEC.text != '') {
+                                await LocalDB().writeTransactions(
+                                  TransactionClasses(
+                                    userId: userId,
+                                    username: username ?? 'Unknown User',
+                                    date: DateTime.now(),
+                                    total: countTotal(),
+                                    payment: 'cash',
+                                    receipent: receipentNameTEC.text,
+                                    address: addressTEC.text,
+                                  ),
+                                  widget.orderList,
+                                ).then((result) {
+                                  if(result) {
+                                    setState(() {
+                                      stage = stage + 1;
+                                    });
+                                  }
                                 });
                               } else {
                                 GlobalDialog(context: context, message: 'Cannot proceed, receipent and address must be filled').okDialog(() {
 
                                 });
                               }
-                            }
-                          } else {
-                            GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
+                              break;
+                            case 3:
+                              GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
+                              break;
+                            default:
+                              GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
                           }
                         },
-                        title: stage == 0 ? 'Proceed to Payment' : stage == 1 ? 'Proceed to Delivery' : stage == 2 ? 'Complete Payment' : 'Back To Main Menu',
+                        title: stage == 0 ? 'Proceed to Payment' : stage == 1 ? paymentMethod == 0 ? 'Complete Order' : 'Proceed to Delivery' : stage == 2 ? 'Complete Order' : 'Back To Main Menu',
                         btnColor: GlobalColor.accentColor,
                         padding: const GlobalPaddingClass(
                           paddingLeft: 50.0,

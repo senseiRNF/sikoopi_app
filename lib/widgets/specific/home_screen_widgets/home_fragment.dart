@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/order_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/screen/detail_order_screen.dart';
@@ -10,7 +10,7 @@ import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/product_display_item.dart';
 
 class UserHomeFragment extends StatelessWidget {
-  final List<CartClasses> productDisplayList;
+  final List<ProductClasses> productDisplayList;
   final Function onPressed;
 
   const UserHomeFragment({
@@ -32,7 +32,7 @@ class UserHomeFragment extends StatelessWidget {
         itemCount: productDisplayList.length,
         itemBuilder: (BuildContext gridContext, int index) {
           return ProductDisplayItem(
-            orderList: productDisplayList[index],
+            productList: productDisplayList[index],
             onPressed: () => onPressed(productDisplayList[index]),
           );
         },
@@ -80,7 +80,7 @@ class AdminHomeFragment extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GlobalText(
-                      content: activeOrder[index].orderCode,
+                      content: activeOrder[index].orderCode ?? 'Unknown',
                       size: 18.0,
                       align: TextAlign.start,
                       padding: const GlobalPaddingClass(
@@ -90,9 +90,9 @@ class AdminHomeFragment extends StatelessWidget {
                       ),
                     ),
                     GlobalText(
-                      content: activeOrder[index].status ? 'Selesai' : 'Diproses',
+                      content: activeOrder[index].status != null && activeOrder[index].status! ? 'Selesai' : 'Diproses',
                       size: 18.0,
-                      color: activeOrder[index].status ? GlobalColor.defaultBlue : GlobalColor.defaultRed,
+                      color: activeOrder[index].status != null && activeOrder[index].status! ? GlobalColor.defaultBlue : GlobalColor.defaultRed,
                       align: TextAlign.start,
                       padding: const GlobalPaddingClass(
                         paddingLeft: 20.0,
@@ -103,7 +103,7 @@ class AdminHomeFragment extends StatelessWidget {
                   ],
                 ),
                 GlobalText(
-                  content: DateFormat('dd MMMM yyyy').format(activeOrder[index].date),
+                  content: activeOrder[index].date != null ? DateFormat('dd MMMM yyyy').format(activeOrder[index].date!) : '-',
                   size: 16.0,
                   align: TextAlign.start,
                   padding: const GlobalPaddingClass(

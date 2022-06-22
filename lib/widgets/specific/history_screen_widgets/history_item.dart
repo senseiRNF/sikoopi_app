@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
+import 'package:intl/intl.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
+import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class HistoryItem extends StatelessWidget {
-  final HistoryClasses historyItem;
+  final TransactionClasses transactionItem;
   final Function? onPressed;
   
   const HistoryItem({
     Key? key, 
-    required this.historyItem,
+    required this.transactionItem,
     this.onPressed,
   }) : super(key: key);
   
@@ -20,7 +22,7 @@ class HistoryItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0,),
       ),
       child: InkWell(
-        onTap: onPressed != null ? () => onPressed!(historyItem) : () {},
+        onTap: onPressed != null ? () => onPressed!(transactionItem) : () {},
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0,),
         ),
@@ -29,7 +31,7 @@ class HistoryItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             GlobalText(
-              content: historyItem.orderDate,
+              content: transactionItem.date != null ? DateFormat('dd-MM-yyyy').format(transactionItem.date!) : 'Unknown Date',
               size: 18.0,
               isBold: true,
               align: TextAlign.center,
@@ -41,24 +43,44 @@ class HistoryItem extends StatelessWidget {
               ),
             ),
             GlobalText(
-              content: 'Receipent: ${historyItem.receiverName}',
+              content: transactionItem.status != null ? transactionItem.status!.replaceFirst(transactionItem.status!.substring(0, 1), transactionItem.status!.substring(0, 1).toUpperCase()) : 'Unknown Status',
               size: 16.0,
+              color: transactionItem.status != null ? transactionItem.status! == 'waiting' ? GlobalColor.defaultBlue : GlobalColor.defaultGreen : GlobalColor.defaultRed,
               align: TextAlign.start,
               padding: const GlobalPaddingClass(
                 paddingLeft: 10.0,
-                paddingRight: 10.0,
-              ),
-            ),
-            GlobalText(
-              content: 'Address: ${historyItem.address}',
-              size: 16.0,
-              align: TextAlign.start,
-              padding: const GlobalPaddingClass(
-                paddingLeft: 10.0,
-                paddingTop: 10.0,
                 paddingRight: 10.0,
                 paddingBottom: 10.0,
               ),
+            ),
+            GlobalText(
+              content: 'Buyer: ${transactionItem.username ?? "Unknown Buyer"}',
+              size: 16.0,
+              align: TextAlign.start,
+              padding: const GlobalPaddingClass(
+                paddingLeft: 10.0,
+                paddingRight: 10.0,
+                paddingBottom: 10.0,
+              ),
+            ),
+            GlobalText(
+              content: 'Rp.${NumberFormat('#,###', 'en_ID').format(transactionItem.total).replaceAll(',', '.')}',
+              size: 20.0,
+              color: Colors.deepOrange,
+              isBold: true,
+              align: TextAlign.end,
+              padding: const GlobalPaddingClass(
+                paddingLeft: 10.0,
+                paddingRight: 10.0,
+                paddingBottom: 10.0,
+              ),
+            ),
+            const Icon(
+              Icons.expand_more,
+              size: 20.0,
+            ),
+            const SizedBox(
+              height: 10.0,
             ),
           ],
         ),

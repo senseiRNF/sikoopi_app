@@ -32,7 +32,7 @@ class CheckoutItem extends StatelessWidget {
                 paddingBottom: 10.0,
               ),
               content: Image.asset(
-                orderItem.imagePath,
+                orderItem.imagePath ?? '',
                 fit: BoxFit.contain,
               ),
             ),
@@ -42,13 +42,13 @@ class CheckoutItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GlobalText(
-                  content: orderItem.name,
+                  content: orderItem.name ?? 'Unknown Name',
                   size: 18.0,
                   isBold: true,
                   align: TextAlign.center,
                 ),
                 GlobalText(
-                  content: orderItem.uom,
+                  content: orderItem.uom ?? 'Unknown UOM',
                   size: 16.0,
                   align: TextAlign.center,
                 ),
@@ -71,7 +71,7 @@ class CheckoutItem extends StatelessWidget {
                     ),
                     Expanded(
                       child: GlobalText(
-                        content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.totalQty * orderItem.price).replaceAll(',', '.')},-",
+                        content: orderItem.totalQty != null && orderItem.price != null ? "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.totalQty! * orderItem.price!).replaceAll(',', '.')},-" : 'Unknown Total',
                         size: 16.0,
                         align: TextAlign.center,
                       ),

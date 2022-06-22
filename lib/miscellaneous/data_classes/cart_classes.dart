@@ -1,17 +1,17 @@
 class CartClasses {
-  int id;
-  String name;
-  String uom;
-  int price;
-  String imagePath;
-  int totalQty;
+  int? id;
+  String? name;
+  String? uom;
+  int? price;
+  String? imagePath;
+  int? totalQty;
 
   CartClasses({
-    required this.id,
-    required this.name,
-    required this.uom,
-    required this.price,
-    required this.imagePath,
-    required this.totalQty,
+    this.id,
+    this.name,
+    this.uom,
+    this.price,
+    this.imagePath,
+    this.totalQty,
   });
 }

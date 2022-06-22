@@ -1,29 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_detail_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_screen_header.dart';
 
 class HistoryScreen extends StatefulWidget {
-  final List<HistoryClasses> historyList;
-
-  const HistoryScreen({
-    Key? key,
-    required this.historyList,
-  }) : super(key: key);
+  const HistoryScreen({Key? key}) : super(key: key);
 
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  HistoryClasses? selectedItem;
+  List<TransactionClasses> transactionList = [];
+  List<CartClasses> detailTransactionList = [];
+
+  TransactionClasses? selectedItem;
 
   @override
   void initState() {
     super.initState();
+
+    initLoad();
+  }
+
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((auth) async {
+      if(auth != null && auth.id != null) {
+        await LocalDB().readTransactionByUser(auth.id!).then((result) async {
+          setState(() {
+            transactionList = result;
+          });
+        });
+      }
+    });
   }
 
   Future<bool> onBackPressed() {
@@ -69,15 +84,35 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     },
                   ),
                   Expanded(
-                    child: selectedItem != null ?
-                    HistoryDetailFragment(historyClassesList: selectedItem!) :
-                    HistoryFragment(
-                      historyList: widget.historyList,
-                      onPressed: (HistoryClasses historyItem) {
-                        setState(() {
-                          selectedItem = historyItem;
-                        });
-                      },
+                    child: ListView(
+                      children: [
+                        selectedItem != null ?
+                        HistoryDetailFragment(
+                          transaction: selectedItem!,
+                          detailTransaction: detailTransactionList,
+                          onPressed: () {
+                            setState(() {
+                              detailTransactionList = [];
+                              selectedItem = null;
+                            });
+                          },
+                        ) :
+                        HistoryFragment(
+                          transactionList: transactionList,
+                          onPressed: (TransactionClasses? transactionItem) async {
+                            if(transactionItem != null) {
+                              if(transactionItem.id != null) {
+                                await LocalDB().readDetailTransaction(transactionItem.id!).then((detailTransaction) {
+                                  setState(() {
+                                    detailTransactionList = detailTransaction;
+                                    selectedItem = transactionItem;
+                                  });
+                                });
+                              }
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],

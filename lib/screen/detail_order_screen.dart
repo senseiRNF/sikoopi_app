@@ -59,12 +59,12 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           GlobalText(
-                            content: widget.detailActiveOrder.orderCode,
+                            content: widget.detailActiveOrder.orderCode ?? 'Unknown Code',
                             size: 18.0,
                             isBold: true,
                           ),
                           GlobalText(
-                            content: DateFormat('dd MMMM yyyy').format(widget.detailActiveOrder.date),
+                            content: widget.detailActiveOrder.date != null ? DateFormat('dd MMMM yyyy').format(widget.detailActiveOrder.date!) : 'Unknown Date',
                             size: 16.0,
                             align: TextAlign.start,
                             padding: const GlobalPaddingClass(
@@ -85,12 +85,12 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                   ),
                 ),
                 Expanded(
-                  child: widget.detailActiveOrder.detailOrder.isNotEmpty ?
+                  child: widget.detailActiveOrder.detailOrder != null && widget.detailActiveOrder.detailOrder!.isNotEmpty ?
                   ListView.builder(
-                    itemCount: widget.detailActiveOrder.detailOrder.length,
+                    itemCount: widget.detailActiveOrder.detailOrder!.length,
                     itemBuilder: (BuildContext listContext, int index) {
                       return DetailOrderItem(
-                        orderItem: widget.detailActiveOrder.detailOrder[index],
+                        orderItem: widget.detailActiveOrder.detailOrder![index],
                       );
                     },
                   ) :
@@ -104,7 +104,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                     ),
                   ),
                 ),
-                widget.detailActiveOrder.detailOrder.isNotEmpty ?
+                widget.detailActiveOrder.detailOrder != null && widget.detailActiveOrder.detailOrder!.isNotEmpty ?
                 GlobalElevatedButton(
                   onPressed: () {
 

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/screen/splash_screen.dart';
+import 'package:sikoopi_app/services/local_db.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,7 +11,9 @@ void main() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
-    runApp(const MainApp());
+    LocalDB().openDB().then((_) {
+      runApp(const MainApp());
+    });
   });
 }
 

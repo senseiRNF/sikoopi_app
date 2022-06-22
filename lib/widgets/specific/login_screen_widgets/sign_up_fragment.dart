@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/screen/home_screen.dart';
+import 'package:sikoopi_app/services/local_db.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_input_field.dart';
@@ -85,18 +87,47 @@ class SignUpFragment extends StatelessWidget {
         ),
         GlobalElevatedButton(
           onPressed: () async {
-            await SharedPref().writeAuthorization(
-              UserClasses(
-                username: 'Test Account',
-                phoneNo: '0123456789',
-                email: 'testaccount@gmail.com',
-                role: 'user',
-              ),
-            ).then((result) {
-              if(result) {
-                GlobalRoute(context: context).replaceWith(const HomeScreen());
+            if(passTEC.text == confPassTEC.text) {
+              if(nameTEC.text != '' && phoneTEC.text != '' && emailTEC.text != '') {
+                await LocalDB().writeUser(
+                  UserClasses(
+                    username: nameTEC.text,
+                    phoneNo: phoneTEC.text,
+                    email: emailTEC.text,
+                    pass: passTEC.text,
+                    role: 'user',
+                  ),
+                ).then((createResult) async {
+                  if(createResult[0]) {
+                    await SharedPref().writeAuthorization(
+                      UserClasses(
+                        id: createResult[1],
+                        username: nameTEC.text,
+                        phoneNo: phoneTEC.text,
+                        email: emailTEC.text,
+                        role: 'user',
+                      ),
+                    ).then((authResult) {
+                      if(authResult) {
+                        GlobalRoute(context: context).replaceWith(const HomeScreen());
+                      } else {
+                        GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
+
+                        });
+                      }
+                    });
+                  } else {
+                    GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
+
+                    });
+                  }
+                });
               }
-            });
+            } else {
+              GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
+
+              });
+            }
           },
           title: 'Sign Up',
           titleSize: 18.0,
