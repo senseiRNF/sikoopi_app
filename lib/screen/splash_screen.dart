@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/screen/home_screen.dart';
 import 'package:sikoopi_app/screen/login_screen.dart';
+import 'package:sikoopi_app/services/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -17,8 +20,20 @@ class _SplashScreen extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      GlobalRoute(context: context).replaceWith(const LoginScreen());
+    initLoad();
+  }
+
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((AuthorizationClasses? auth) {
+      if(auth != null) {
+        Future.delayed(const Duration(seconds: 2), () {
+          GlobalRoute(context: context).replaceWith(const HomeScreen());
+        });
+      } else {
+        Future.delayed(const Duration(seconds: 2), () {
+          GlobalRoute(context: context).replaceWith(const LoginScreen());
+        });
+      }
     });
   }
 

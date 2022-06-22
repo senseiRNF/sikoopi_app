@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/order_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/authorization_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/history_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_drawer.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/home_screen_widgets/home_screen_header.dart';
@@ -20,12 +23,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int orderCounter = 0;
 
+  String? role;
+  
   @override
   void initState() {
     super.initState();
+
+    initLoad();
   }
 
-  List<CartClasses> cartItemList = [];
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((AuthorizationClasses? auth) {
+      if(auth != null) {
+        setState(() {
+          role = auth.role;
+        });
+      }
+    });
+  }
+  
   List<CartClasses> productDisplayList = [
     CartClasses(
       id: 1,
@@ -92,7 +108,87 @@ class _HomeScreenState extends State<HomeScreen> {
       totalQty: 0,
     ),
   ];
+  List<CartClasses> cartItemList = [];
   List<HistoryClasses> historyItemList = [];
+  List<ActiveOrderClass> activeOrderList = [
+    ActiveOrderClass(
+      orderCode: 'EX/001/14/06/22',
+      date: DateTime(2022, 06, 14),
+      detailOrder: [
+        DetailActiveOrderClass(
+          productName: 'Beras Sania Premium',
+          productUOM: '5 Kg',
+          productPrice: 60000,
+          qty: 2,
+          subtotal: 120000,
+          imgPath: '${GlobalString.assetImagePath}/product_icon/beras.png',
+        ),
+        DetailActiveOrderClass(
+          productName: 'Telur',
+          productUOM: '10 Btr',
+          productPrice: 25000,
+          qty: 2,
+          subtotal: 50000,
+          imgPath: '${GlobalString.assetImagePath}/product_icon/telur.png',
+        ),
+      ],
+      total: 170000,
+      paymentMethod: 'cash',
+      status: false,
+    ),
+    ActiveOrderClass(
+      orderCode: 'EX/002/14/06/22',
+      date: DateTime(2022, 06, 14),
+      detailOrder: [
+        DetailActiveOrderClass(
+          productName: 'Gula Rose Brand',
+          productUOM: '1 Kg',
+          productPrice: 20000,
+          qty: 3,
+          subtotal: 60000,
+          imgPath: '${GlobalString.assetImagePath}/product_icon/gula_pasir.png',
+        ),
+      ],
+      total: 60000,
+      paymentMethod: 'cash',
+      status: false,
+    ),
+    ActiveOrderClass(
+      orderCode: 'EX/003/14/06/22',
+      date: DateTime(2022, 06, 14),
+      detailOrder: [
+        DetailActiveOrderClass(
+          productName: 'Sabun Lifebuoy Refill',
+          productUOM: '900 Ml',
+          productPrice: 50000,
+          qty: 1,
+          subtotal: 50000,
+          imgPath: '${GlobalString.assetImagePath}/product_icon/sabun_cair.png',
+        ),
+        DetailActiveOrderClass(
+          productName: 'Sunlight',
+          productUOM: '750 Ml',
+          productPrice: 25000,
+          qty: 1,
+          subtotal: 25000,
+          imgPath: '${GlobalString.assetImagePath}/product_icon/sabun_cuci_piring.png',
+        ),
+        DetailActiveOrderClass(
+          productName: 'Molto Pewangi',
+          productUOM: '750 Ml',
+          productPrice: 30000,
+          qty: 1,
+          subtotal: 30000,
+          imgPath: '${GlobalString.assetImagePath}/product_icon/pewangi_pakaian.png',
+        ),
+      ],
+      total: 105000,
+      paymentMethod: 'transfer',
+      receipent: 'Umar Abdul Aziz',
+      address: 'Jl. Sana-sini no.5, RT 007/ RW 001, Ds. Bojongkenyot',
+      status: false,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -103,12 +199,20 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             HomeScreenHeader(
+              role: role ?? '',
               onPressed: () {
                 _key.currentState!.openEndDrawer();
               },
             ),
             Expanded(
-              child: HomeFragment(
+              child: role == 'admin' ?
+              AdminHomeFragment(
+                activeOrder: activeOrderList,
+                onRefresh: () {
+
+                },
+              ) :
+              UserHomeFragment(
                 productDisplayList: productDisplayList,
                 onPressed: (CartClasses selectedItem) {
                   if(cartItemList.isEmpty) {
@@ -146,6 +250,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      endDrawer: role != null && role == 'admin' ?
+      const AdminHomeDrawer() :
+      UserHomeDrawer(
       endDrawer: HomeDrawer(
         orderList: cartItemList,
         historyList: historyItemList,
