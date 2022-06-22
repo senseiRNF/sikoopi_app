@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int orderCounter = 0;
 
   String? role;
-
+  
   @override
   void initState() {
     super.initState();
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
-
+  
   List<CartClasses> productDisplayList = [
     CartClasses(
       id: 1,
@@ -253,6 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
       endDrawer: role != null && role == 'admin' ?
       const AdminHomeDrawer() :
       UserHomeDrawer(
+      endDrawer: HomeDrawer(
         orderList: cartItemList,
         historyList: historyItemList,
         onChangeQty: (List<int> qtyChange) {
