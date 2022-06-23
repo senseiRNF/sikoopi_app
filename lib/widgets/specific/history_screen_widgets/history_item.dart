@@ -43,9 +43,9 @@ class HistoryItem extends StatelessWidget {
               ),
             ),
             GlobalText(
-              content: transactionItem.status != null ? transactionItem.status!.replaceFirst(transactionItem.status!.substring(0, 1), transactionItem.status!.substring(0, 1).toUpperCase()) : 'Unknown Status',
+              content: transactionItem.status ?? 'Unknown Status',
               size: 16.0,
-              color: transactionItem.status != null ? transactionItem.status! == 'waiting' ? GlobalColor.defaultBlue : GlobalColor.defaultGreen : GlobalColor.defaultRed,
+              color: transactionItem.status != null ? transactionItem.status! == 'Waiting' ? GlobalColor.defaultBlue : GlobalColor.defaultGreen : GlobalColor.defaultRed,
               align: TextAlign.start,
               padding: const GlobalPaddingClass(
                 paddingLeft: 10.0,
@@ -63,6 +63,32 @@ class HistoryItem extends StatelessWidget {
                 paddingBottom: 10.0,
               ),
             ),
+            transactionItem.receipent != null ?
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                GlobalText(
+                  content: 'Receipent: ${transactionItem.receipent ?? "Unknown Receipent"}',
+                  size: 16.0,
+                  align: TextAlign.start,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 10.0,
+                    paddingRight: 10.0,
+                  ),
+                ),
+                GlobalText(
+                  content: 'Address: ${transactionItem.address ?? "Unknown Address"}',
+                  size: 16.0,
+                  align: TextAlign.start,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 10.0,
+                    paddingRight: 10.0,
+                    paddingBottom: 10.0,
+                  ),
+                ),
+              ],
+            ) :
+            const Material(),
             GlobalText(
               content: 'Rp.${NumberFormat('#,###', 'en_ID').format(transactionItem.total).replaceAll(',', '.')}',
               size: 20.0,

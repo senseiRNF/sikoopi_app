@@ -25,6 +25,7 @@ class _ProfileScreen extends State<ProfileScreen> {
 
   TextEditingController nameTEC = TextEditingController();
   TextEditingController phoneTEC = TextEditingController();
+  TextEditingController addressTEC = TextEditingController();
 
   String? email;
   String? role;
@@ -43,6 +44,7 @@ class _ProfileScreen extends State<ProfileScreen> {
           userId = result.id;
           nameTEC.text = result.username ?? 'Unknown Name';
           phoneTEC.text = result.phoneNo ?? 'Unknown Phone';
+          addressTEC.text = result.address ?? 'Unknown Address';
           email = result.email ?? 'Unknown Email';
           role = result.role ?? 'user';
         });
@@ -107,6 +109,10 @@ class _ProfileScreen extends State<ProfileScreen> {
                                       title: 'Phone',
                                       inputType: TextInputType.phone,
                                     ),
+                                    GlobalTextfield(
+                                      controller: addressTEC,
+                                      title: 'Address',
+                                    ),
                                     GlobalElevatedButton(
                                       onPressed: () async {
                                         await LocalDB().updateUser(
@@ -114,6 +120,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                                             id: userId,
                                             username: nameTEC.text,
                                             phoneNo: phoneTEC.text,
+                                            address: addressTEC.text,
                                           ),
                                         ).then((result) async {
                                           if(result) {
@@ -123,6 +130,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                                                 username: nameTEC.text,
                                                 phoneNo: phoneTEC.text,
                                                 email: email,
+                                                address: addressTEC.text,
                                                 role: role,
                                               ),
                                             ).then((writeResult) {
@@ -159,6 +167,10 @@ class _ProfileScreen extends State<ProfileScreen> {
                                     ProfileItem(
                                       iconPath: 'phone_no_icon.png',
                                       title: phoneTEC.text,
+                                    ),
+                                    ProfileItem(
+                                      iconPath: null,
+                                      title: addressTEC.text,
                                     ),
                                     ProfileItem(
                                       iconPath: 'email_icon.png',

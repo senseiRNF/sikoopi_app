@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController signUpNameTEC = TextEditingController();
   TextEditingController signUpPhoneTEC = TextEditingController();
+  TextEditingController signUpAddressTEC = TextEditingController();
   TextEditingController signUpEmailTEC = TextEditingController();
   TextEditingController signUpPassTEC = TextEditingController();
   TextEditingController signUpConfPassTEC = TextEditingController();
@@ -52,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SignUpFragment(
               nameTEC: signUpNameTEC,
               phoneTEC: signUpPhoneTEC,
+              addressTEC: signUpAddressTEC,
               emailTEC: signUpEmailTEC,
               passTEC: signUpPassTEC,
               confPassTEC: signUpConfPassTEC,

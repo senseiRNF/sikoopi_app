@@ -21,7 +21,7 @@ class LocalDB {
 
     Database database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(
-        'CREATE TABLE user (id INTEGER PRIMARY KEY, name TEXT, phone TEXT, email TEXT, pass TEXT, role TEXT, isActive TEXT)',
+        'CREATE TABLE user (id INTEGER PRIMARY KEY, name TEXT, phone TEXT, address TEXT, email TEXT, pass TEXT, role TEXT, isActive TEXT)',
       );
 
       await db.execute(
@@ -29,7 +29,7 @@ class LocalDB {
       );
 
       await db.execute(
-        'CREATE TABLE transactions (id INTEGER PRIMARY KEY, userId INTEGER, username TEXT, date TEXT, total INTEGER, payment TEXT, receipent TEXT, address TEXT, status TEXT, isActive TEXT)',
+        'CREATE TABLE transactions (id INTEGER PRIMARY KEY, userId INTEGER, username TEXT, date TEXT, total INTEGER, payment TEXT, receipent TEXT, address TEXT, status TEXT, transferReceiptImage String, isActive TEXT)',
       );
 
       await db.execute(
@@ -41,7 +41,7 @@ class LocalDB {
         'INSERT INTO user (name, phone, email, pass, role, isActive) VALUES (?, ?, ?, ?, ?, ?)',
         [
           'Admin Nadia',
-          '+62-823-2219-6306',
+          '082322196306',
           'nadia.sikoopi@gmail.com',
           'p4ssw0rd',
           'admin',
@@ -141,11 +141,12 @@ class LocalDB {
 
     await openDB().then((db) async {
       await db.rawInsert(
-        'INSERT INTO user (name, phone, email, pass, role, isActive) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO user (name, phone, email, address, pass, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
           user.username,
           user.phoneNo,
           user.email,
+          user.address,
           user.pass,
           user.role,
           user.isActive,
@@ -185,7 +186,7 @@ class LocalDB {
 
     await openDB().then((db) async {
       await db.rawInsert(
-        'INSERT INTO transactions (userId, username, date, total, payment, receipent, address, status, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO transactions (userId, username, date, total, payment, receipent, address, status, transferReceiptImage, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           transactions.userId,
           transactions.username,
@@ -194,7 +195,8 @@ class LocalDB {
           transactions.payment,
           transactions.receipent,
           transactions.address,
-          'waiting',
+          'Waiting',
+          transactions.transferReceiptImage,
           'active',
         ],
       ).then((int transactionId) async {
@@ -243,6 +245,7 @@ class LocalDB {
                 username: "${result[i]['name']}",
                 phoneNo: "${result[i]['phone']}",
                 email: "${result[i]['email']}",
+                address: "${result[i]['address']}",
                 role: "${result[i]['role']}",
                 isActive: result[i]['isActive'] == 'active' ? true : false,
               ),
@@ -302,6 +305,7 @@ class LocalDB {
                 receipent: "${result[i]['receipent']}",
                 address: "${result[i]['address']}",
                 status: "${result[i]['status']}",
+                transferReceiptImage: "${result[i]['transferReceiptImage']}",
                 isActive: result[i]['isActive'] == 'active' ? true : false,
               ),
             );
@@ -330,6 +334,7 @@ class LocalDB {
               username: "${result[i]['name']}",
               phoneNo: "${result[i]['phone']}",
               email: "${result[i]['email']}",
+              address: "${result[i]['address']}",
               role: "${result[i]['role']}",
               isActive: result[i]['isActive'] == 'active' ? true : false,
             );
@@ -416,6 +421,7 @@ class LocalDB {
               username: "${result[i]['name']}",
               phoneNo: "${result[i]['phone']}",
               email: "${result[i]['email']}",
+              address: "${result[i]['address']}",
               role: "${result[i]['role']}",
               isActive: result[i]['isActive'] == 'active' ? true : false,
             );
@@ -450,6 +456,7 @@ class LocalDB {
                 receipent: "${result[i]['receipent']}",
                 address: "${result[i]['address']}",
                 status: "${result[i]['status']}",
+                transferReceiptImage: "${result[i]['transferReceiptImage']}",
                 isActive: result[i]['isActive'] == 'active' ? true : false,
               ),
             );
@@ -467,10 +474,11 @@ class LocalDB {
 
     await openDB().then((db) async {
       await db.rawUpdate(
-        'UPDATE user SET name = ?, phone = ? WHERE id = ?',
+        'UPDATE user SET name = ?, phone = ?, address = ? WHERE id = ?',
         [
           user.username,
           user.phoneNo,
+          user.address,
           user.id,
         ],
       ).then((_) {

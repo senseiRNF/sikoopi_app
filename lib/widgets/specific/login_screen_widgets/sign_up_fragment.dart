@@ -15,6 +15,7 @@ class SignUpFragment extends StatelessWidget {
   final TextEditingController nameTEC;
   final TextEditingController phoneTEC;
   final TextEditingController emailTEC;
+  final TextEditingController addressTEC;
   final TextEditingController passTEC;
   final TextEditingController confPassTEC;
 
@@ -23,6 +24,7 @@ class SignUpFragment extends StatelessWidget {
     required this.nameTEC,
     required this.phoneTEC,
     required this.emailTEC,
+    required this.addressTEC,
     required this.passTEC,
     required this.confPassTEC,
   }) : super(key: key);
@@ -55,6 +57,14 @@ class SignUpFragment extends StatelessWidget {
           controller: phoneTEC,
           title: 'Phone',
           inputType: TextInputType.phone,
+          padding: const GlobalPaddingClass(
+            paddingLeft: 50.0,
+            paddingRight: 50.0,
+          ),
+        ),
+        GlobalTextfield(
+          controller: addressTEC,
+          title: 'Address',
           padding: const GlobalPaddingClass(
             paddingLeft: 50.0,
             paddingRight: 50.0,
@@ -94,6 +104,7 @@ class SignUpFragment extends StatelessWidget {
                     username: nameTEC.text,
                     phoneNo: phoneTEC.text,
                     email: emailTEC.text,
+                    address: addressTEC.text,
                     pass: passTEC.text,
                     role: 'user',
                   ),
@@ -105,6 +116,7 @@ class SignUpFragment extends StatelessWidget {
                         username: nameTEC.text,
                         phoneNo: phoneTEC.text,
                         email: emailTEC.text,
+                        address: addressTEC.text,
                         role: 'user',
                       ),
                     ).then((authResult) {

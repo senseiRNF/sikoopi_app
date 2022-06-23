@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
@@ -37,8 +40,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   TextEditingController receipentNameTEC = TextEditingController();
   TextEditingController addressTEC = TextEditingController();
 
-  bool isEditing = false;
-
   String? username;
 
   @override
@@ -54,6 +55,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         setState(() {
           userId = result.id;
           username = result.username;
+          addressTEC.text = result.address ?? 'Unknown Address';
         });
       }
     });
@@ -69,6 +71,88 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         }
       }
     }
+
+    return result;
+  }
+
+  Future<bool> savingTransaction() async {
+    bool result = false;
+
+    GlobalDialog(context: context, message: 'Before continue, please take a picture of the evidence of transfer').okDialog(() async {
+      var status = await Permission.storage.status;
+
+      if(status.isGranted) {
+        await ImagePicker().pickImage(
+          source: ImageSource.camera,
+          preferredCameraDevice: CameraDevice.rear,
+        ).then((image) async {
+          if(image != null) {
+            var savingResult = await ImageGallerySaver.saveImage(await image.readAsBytes());
+
+            if(savingResult['isSuccess']) {
+              await LocalDB().writeTransactions(
+                TransactionClasses(
+                  userId: userId,
+                  username: username ?? 'Unknown User',
+                  date: DateTime.now(),
+                  total: countTotal(),
+                  payment: 'transfer',
+                  receipent: receipentNameTEC.text,
+                  address: addressTEC.text,
+                  transferReceiptImage: savingResult['filePath'],
+                ),
+                widget.orderList,
+              ).then((writeResult) {
+                if(writeResult) {
+                  setState(() {
+                    stage = stage + 1;
+                  });
+                }
+              });
+            }
+          }
+        });
+      } else {
+        await Permission.storage.request().then((permissionResult) async {
+          if(permissionResult.isGranted) {
+            await ImagePicker().pickImage(
+              source: ImageSource.camera,
+              preferredCameraDevice: CameraDevice.rear,
+            ).then((image) async {
+              if(image != null) {
+                var savingResult = await ImageGallerySaver.saveImage(await image.readAsBytes());
+
+                if(savingResult['isSuccess']) {
+                  await LocalDB().writeTransactions(
+                    TransactionClasses(
+                      userId: userId,
+                      username: username ?? 'Unknown User',
+                      date: DateTime.now(),
+                      total: countTotal(),
+                      payment: 'transfer',
+                      receipent: receipentNameTEC.text,
+                      address: addressTEC.text,
+                      transferReceiptImage: savingResult['filePath'],
+                    ),
+                    widget.orderList,
+                  ).then((writeResult) {
+                    if(writeResult) {
+                      setState(() {
+                        stage = stage + 1;
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          } else {
+            GlobalDialog(context: context, message: 'Cannot proceed, permission to store image is denied').okDialog(() {
+
+            });
+          }
+        });
+      }
+    });
 
     return result;
   }
@@ -144,12 +228,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ) :
                     stage == 2 ?
                     CheckoutDeliveryFragment(
-                      isEditing: isEditing,
-                      onPressed: () {
-                        setState(() {
-                          isEditing = !isEditing;
-                        });
-                      },
                       receipentNameTEC: receipentNameTEC,
                       addressDetailTEC: addressTEC,
                     ) :
@@ -206,6 +284,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     payment: 'cash',
                                     receipent: '',
                                     address: '',
+                                    transferReceiptImage: '',
                                   ),
                                   widget.orderList,
                                 ).then((result) {
@@ -223,24 +302,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               break;
                             case 2:
                               if(receipentNameTEC.text != '' && addressTEC.text != '') {
-                                await LocalDB().writeTransactions(
-                                  TransactionClasses(
-                                    userId: userId,
-                                    username: username ?? 'Unknown User',
-                                    date: DateTime.now(),
-                                    total: countTotal(),
-                                    payment: 'cash',
-                                    receipent: receipentNameTEC.text,
-                                    address: addressTEC.text,
-                                  ),
-                                  widget.orderList,
-                                ).then((result) {
-                                  if(result) {
-                                    setState(() {
-                                      stage = stage + 1;
-                                    });
-                                  }
-                                });
+                                savingTransaction();
                               } else {
                                 GlobalDialog(context: context, message: 'Cannot proceed, receipent and address must be filled').okDialog(() {
 

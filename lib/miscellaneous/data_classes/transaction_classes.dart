@@ -8,6 +8,7 @@ class TransactionClasses {
   String? receipent;
   String? address;
   String? status;
+  String? transferReceiptImage;
   bool? isActive;
 
   TransactionClasses({
@@ -20,6 +21,7 @@ class TransactionClasses {
     this.receipent,
     this.address,
     this.status,
+    this.transferReceiptImage,
     this.isActive,
   });
 }

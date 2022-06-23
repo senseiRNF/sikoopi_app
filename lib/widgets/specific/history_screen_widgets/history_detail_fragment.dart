@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
@@ -54,9 +56,9 @@ class HistoryDetailFragment extends StatelessWidget {
                 ),
               ),
               GlobalText(
-                content: transaction.status != null ? transaction.status!.replaceFirst(transaction.status!.substring(0, 1), transaction.status!.substring(0, 1).toUpperCase()) : 'Unknown Status',
+                content: transaction.status ?? 'Unknown Status',
                 size: 16.0,
-                color: transaction.status != null ? transaction.status! == 'waiting' ? GlobalColor.defaultBlue : GlobalColor.defaultGreen : GlobalColor.defaultRed,
+                color: transaction.status != null ? transaction.status! == 'Waiting' ? GlobalColor.defaultBlue : GlobalColor.defaultGreen : GlobalColor.defaultRed,
                 align: TextAlign.start,
                 padding: const GlobalPaddingClass(
                   paddingLeft: 10.0,
@@ -74,6 +76,42 @@ class HistoryDetailFragment extends StatelessWidget {
                   paddingBottom: 10.0,
                 ),
               ),
+              transaction.receipent != null ?
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  GlobalText(
+                    content: 'Receipent: ${transaction.receipent ?? "Unknown Receipent"}',
+                    size: 16.0,
+                    align: TextAlign.start,
+                    padding: const GlobalPaddingClass(
+                      paddingLeft: 10.0,
+                      paddingRight: 10.0,
+                    ),
+                  ),
+                  GlobalText(
+                    content: 'Address: ${transaction.address ?? "Unknown Address"}',
+                    size: 16.0,
+                    align: TextAlign.start,
+                    padding: const GlobalPaddingClass(
+                      paddingLeft: 10.0,
+                      paddingRight: 10.0,
+                      paddingBottom: 10.0,
+                    ),
+                  ),
+                ],
+              ) :
+              const Material(),
+              transaction.transferReceiptImage != null ?
+              SizedBox(
+                width: 40.0,
+                height: 40.0,
+                child: Image.file(
+                  File(transaction.transferReceiptImage!),
+                  fit: BoxFit.contain,
+                ),
+              ) :
+              const Material(),
               GlobalText(
                 content: 'Rp.${NumberFormat('#,###', 'en_ID').format(transaction.total).replaceAll(',', '.')}',
                 size: 20.0,

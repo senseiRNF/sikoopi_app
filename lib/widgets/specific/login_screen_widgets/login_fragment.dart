@@ -80,6 +80,7 @@ class LoginFragment extends StatelessWidget {
                       username: loginResult.username,
                       phoneNo: loginResult.phoneNo,
                       email: loginResult.email,
+                      address: loginResult.address,
                       role: loginResult.role,
                     ),
                   ).then((authResult) {

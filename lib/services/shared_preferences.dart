@@ -20,6 +20,7 @@ class SharedPref {
           user.username ?? 'Unknown Name',
           user.phoneNo ?? 'Unknown Phone',
           user.email ?? 'Unknown Email',
+          user.address ?? 'Unknown Address',
           user.role ?? 'Unknown Role',
         ],
       ).then((_) {
@@ -42,7 +43,8 @@ class SharedPref {
           username: authList[1],
           phoneNo: authList[2],
           email: authList[3],
-          role: authList[4],
+          address: authList[4],
+          role: authList[5],
         );
       }
     });
