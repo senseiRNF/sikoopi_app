@@ -63,7 +63,7 @@ class HistoryItem extends StatelessWidget {
                 paddingBottom: 10.0,
               ),
             ),
-            transactionItem.receipent != null ?
+            transactionItem.payment != null && transactionItem.payment == 'transfer' && transactionItem.receipent != null ?
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

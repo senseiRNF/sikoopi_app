@@ -10,7 +10,12 @@ import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_frag
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_screen_header.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+  final String role;
+
+  const HistoryScreen({
+    Key? key,
+    required this.role,
+  }) : super(key: key);
 
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
@@ -31,12 +36,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void initLoad() async {
     await SharedPref().readAuthorization().then((auth) async {
-      if(auth != null && auth.id != null) {
-        await LocalDB().readTransactionByUser(auth.id!).then((result) async {
-          setState(() {
-            transactionList = result;
+      if(widget.role == 'user') {
+        if(auth != null && auth.id != null) {
+          await LocalDB().readTransactionByUser(auth.id!).then((result) async {
+            setState(() {
+              transactionList = result;
+            });
           });
-        });
+        }
+      } else {
+        if(auth != null && auth.id != null) {
+          await LocalDB().readAllTransaction().then((result) async {
+            setState(() {
+              transactionList = result;
+            });
+          });
+        }
       }
     });
   }

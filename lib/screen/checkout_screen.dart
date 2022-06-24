@@ -310,10 +310,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               }
                               break;
                             case 3:
-                              GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
+                              GlobalRoute(context: context).back(true);
                               break;
                             default:
-                              GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
+                              GlobalRoute(context: context).back(false);
                           }
                         },
                         title: stage == 0 ? 'Proceed to Payment' : stage == 1 ? paymentMethod == 0 ? 'Complete Order' : 'Proceed to Delivery' : stage == 2 ? 'Complete Order' : 'Back To Main Menu',

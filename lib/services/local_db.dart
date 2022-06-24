@@ -50,6 +50,19 @@ class LocalDB {
       );
 
       await db.execute(
+        'INSERT INTO user (name, phone, address, email, pass, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [
+          'User Test',
+          '0123456789',
+          'Test Address',
+          'user.test@sikoopi.com',
+          'p4ssw0rd',
+          'user',
+          'active',
+        ],
+      );
+
+      await db.execute(
         'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
         [
           'Gula Rose Brand',
@@ -330,7 +343,7 @@ class LocalDB {
         if(result.isNotEmpty) {
           for(int i = 0; i < result.length; i++) {
             user = UserClasses(
-              id: int.parse("${result[i]['name']}"),
+              id: int.parse("${result[i]['id']}"),
               username: "${result[i]['name']}",
               phoneNo: "${result[i]['phone']}",
               email: "${result[i]['email']}",
@@ -480,6 +493,23 @@ class LocalDB {
           user.phoneNo,
           user.address,
           user.id,
+        ],
+      ).then((_) {
+        result = true;
+      });
+    });
+
+    return result;
+  }
+
+  Future<bool> completeOrder(int transactionId) async {
+    bool result = false;
+
+    await openDB().then((db) async {
+      await db.rawUpdate(
+        "UPDATE transactions SET status = 'Completed' WHERE id = ?",
+        [
+          transactionId,
         ],
       ).then((_) {
         result = true;

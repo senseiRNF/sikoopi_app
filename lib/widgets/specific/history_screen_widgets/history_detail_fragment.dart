@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
@@ -76,7 +74,7 @@ class HistoryDetailFragment extends StatelessWidget {
                   paddingBottom: 10.0,
                 ),
               ),
-              transaction.receipent != null ?
+              transaction.payment != null && transaction.payment == 'transfer' && transaction.receipent != null ?
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -100,16 +98,6 @@ class HistoryDetailFragment extends StatelessWidget {
                     ),
                   ),
                 ],
-              ) :
-              const Material(),
-              transaction.transferReceiptImage != null ?
-              SizedBox(
-                width: 40.0,
-                height: 40.0,
-                child: Image.file(
-                  File(transaction.transferReceiptImage!),
-                  fit: BoxFit.contain,
-                ),
               ) :
               const Material(),
               GlobalText(
@@ -144,6 +132,45 @@ class HistoryDetailFragment extends StatelessWidget {
                   align: TextAlign.center,
                 ),
               ),
+              transaction.payment != null && transaction.payment == 'transfer' && transaction.transferReceiptImage != null ?
+              Card(
+                elevation: 5.0,
+                child: InkWell(
+                  onTap: () {
+
+                  },
+                  customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0,),
+                  ),
+                  child: GlobalPadding(
+                    paddingClass: const GlobalPaddingClass(
+                      paddingLeft: 10.0,
+                      paddingTop: 10.0,
+                      paddingRight: 10.0,
+                      paddingBottom: 10.0,
+                    ),
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.image,
+                          color: GlobalColor.defaultBlue,
+                        ),
+                        GlobalText(
+                          content: 'See Transfer Receipt',
+                          color: GlobalColor.defaultBlue,
+                          padding: const GlobalPaddingClass(
+                            paddingLeft: 20.0,
+                            paddingRight: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ) :
+              const Material(),
               const SizedBox(
                 height: 10.0,
               ),

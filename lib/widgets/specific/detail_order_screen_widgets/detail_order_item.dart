@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/order_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class DetailOrderItem extends StatelessWidget {
-  final DetailActiveOrderClass orderItem;
+  final CartClasses orderItem;
 
   const DetailOrderItem({
     Key? key,
@@ -32,7 +32,7 @@ class DetailOrderItem extends StatelessWidget {
                 paddingBottom: 10.0,
               ),
               content: Image.asset(
-                orderItem.imgPath ?? '',
+                orderItem.imagePath ?? '',
                 fit: BoxFit.contain,
               ),
             ),
@@ -47,17 +47,17 @@ class DetailOrderItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GlobalText(
-                    content: orderItem.productName ?? 'Unknown Name',
+                    content: orderItem.name ?? 'Unknown Name',
                     size: 16.0,
                     isBold: true,
                     align: TextAlign.center,
                   ),
                   GlobalText(
-                    content: orderItem.productUOM ?? 'Unknown UOM',
+                    content: orderItem.uom ?? 'Unknown UOM',
                     align: TextAlign.center,
                   ),
                   GlobalText(
-                    content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.productPrice).replaceAll(',', '.')},-",
+                    content: "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.price).replaceAll(',', '.')},-",
                     align: TextAlign.center,
                     padding: const GlobalPaddingClass(
                       paddingBottom: 10.0,
@@ -67,14 +67,14 @@ class DetailOrderItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: GlobalText(
-                          content: 'Qty: ${orderItem.qty}',
+                          content: 'Qty: ${orderItem.totalQty}',
                           size: 14.0,
                           align: TextAlign.center,
                         ),
                       ),
                       Expanded(
                         child: GlobalText(
-                          content: orderItem.qty != null && orderItem.productPrice != null ? "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.qty! * orderItem.productPrice!).replaceAll(',', '.')},-" : 'Unknown Total',
+                          content: orderItem.totalQty != null && orderItem.price != null ? "Rp.${NumberFormat('#,###', 'en_ID').format(orderItem.totalQty! * orderItem.price!).replaceAll(',', '.')},-" : 'Unknown Total',
                           size: 14.0,
                           align: TextAlign.center,
                         ),

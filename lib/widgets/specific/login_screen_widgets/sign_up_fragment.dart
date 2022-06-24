@@ -97,44 +97,42 @@ class SignUpFragment extends StatelessWidget {
         ),
         GlobalElevatedButton(
           onPressed: () async {
-            if(passTEC.text == confPassTEC.text) {
-              if(nameTEC.text != '' && phoneTEC.text != '' && emailTEC.text != '') {
-                await LocalDB().writeUser(
-                  UserClasses(
-                    username: nameTEC.text,
-                    phoneNo: phoneTEC.text,
-                    email: emailTEC.text,
-                    address: addressTEC.text,
-                    pass: passTEC.text,
-                    role: 'user',
-                  ),
-                ).then((createResult) async {
-                  if(createResult[0]) {
-                    await SharedPref().writeAuthorization(
-                      UserClasses(
-                        id: createResult[1],
-                        username: nameTEC.text,
-                        phoneNo: phoneTEC.text,
-                        email: emailTEC.text,
-                        address: addressTEC.text,
-                        role: 'user',
-                      ),
-                    ).then((authResult) {
-                      if(authResult) {
-                        GlobalRoute(context: context).replaceWith(const HomeScreen());
-                      } else {
-                        GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
+            if(passTEC.text == confPassTEC.text && nameTEC.text != '' && phoneTEC.text != '' && emailTEC.text != '' && passTEC.text != '' && addressTEC.text != '') {
+              await LocalDB().writeUser(
+                UserClasses(
+                  username: nameTEC.text,
+                  phoneNo: phoneTEC.text,
+                  email: emailTEC.text,
+                  address: addressTEC.text,
+                  pass: passTEC.text,
+                  role: 'user',
+                ),
+              ).then((createResult) async {
+                if(createResult[0]) {
+                  await SharedPref().writeAuthorization(
+                    UserClasses(
+                      id: createResult[1],
+                      username: nameTEC.text,
+                      phoneNo: phoneTEC.text,
+                      email: emailTEC.text,
+                      address: addressTEC.text,
+                      role: 'user',
+                    ),
+                  ).then((authResult) {
+                    if(authResult) {
+                      GlobalRoute(context: context).replaceWith(const HomeScreen());
+                    } else {
+                      GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
 
-                        });
-                      }
-                    });
-                  } else {
-                    GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
+                      });
+                    }
+                  });
+                } else {
+                  GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
 
-                    });
-                  }
-                });
-              }
+                  });
+                }
+              });
             } else {
               GlobalDialog(context: context, message: 'Failed to Register, please check all your data and then try again').okDialog(() {
 

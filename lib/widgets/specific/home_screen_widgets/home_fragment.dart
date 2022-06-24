@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/order_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/screen/detail_order_screen.dart';
@@ -42,7 +42,7 @@ class UserHomeFragment extends StatelessWidget {
 }
 
 class AdminHomeFragment extends StatelessWidget {
-  final List<ActiveOrderClass> activeOrder;
+  final List<TransactionClasses> activeOrder;
   final Function onRefresh;
 
   const AdminHomeFragment({
@@ -64,11 +64,15 @@ class AdminHomeFragment extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () {
-              GlobalRoute(context: context).moveTo(DetailOrderScreen(
-                detailActiveOrder: activeOrder[index],
-              ), (callback) {
-
-              });
+              if(activeOrder[index].id != null) {
+                GlobalRoute(context: context).moveTo(DetailOrderScreen(
+                  transaction: activeOrder[index],
+                ), (callback) {
+                  if(callback != null && callback) {
+                    onRefresh();
+                  }
+                });
+              }
             },
             customBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0,),
@@ -80,7 +84,7 @@ class AdminHomeFragment extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GlobalText(
-                      content: activeOrder[index].orderCode ?? 'Unknown',
+                      content: activeOrder[index].username ?? 'Unknown User',
                       size: 18.0,
                       align: TextAlign.start,
                       padding: const GlobalPaddingClass(
@@ -90,9 +94,9 @@ class AdminHomeFragment extends StatelessWidget {
                       ),
                     ),
                     GlobalText(
-                      content: activeOrder[index].status != null && activeOrder[index].status! ? 'Selesai' : 'Diproses',
+                      content: activeOrder[index].status ?? 'Unknown Status',
                       size: 18.0,
-                      color: activeOrder[index].status != null && activeOrder[index].status! ? GlobalColor.defaultBlue : GlobalColor.defaultRed,
+                      color: activeOrder[index].status != null ? activeOrder[index].status == 'Waiting' ? GlobalColor.defaultBlue : GlobalColor.defaultGreen : GlobalColor.defaultRed,
                       align: TextAlign.start,
                       padding: const GlobalPaddingClass(
                         paddingLeft: 20.0,
@@ -138,25 +142,13 @@ class AdminHomeFragment extends StatelessWidget {
         );
       },
     ) :
-    Stack(
-      children: [
-        const Center(
-          child: GlobalText(
-            content: "There's no order...",
-            size: 30.0,
-            isBold: true,
-            align: TextAlign.center,
-          ),
-        ),
-        RefreshIndicator(
-          onRefresh: () async {
-
-          },
-          child: ListView(
-
-          ),
-        )
-      ],
+    const Center(
+      child: GlobalText(
+        content: "There's no order...",
+        size: 30.0,
+        isBold: true,
+        align: TextAlign.center,
+      ),
     );
   }
 }

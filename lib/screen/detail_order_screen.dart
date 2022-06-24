@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/order_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/services/local_db.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
@@ -10,11 +14,11 @@ import 'package:sikoopi_app/widgets/specific/detail_order_screen_widgets/detail_
 import 'package:sikoopi_app/widgets/specific/order_cart_screen_widgets/order_cart_screen_header.dart';
 
 class DetailOrderScreen extends StatefulWidget {
-  final ActiveOrderClass detailActiveOrder;
+  final TransactionClasses transaction;
   
   const DetailOrderScreen({
     Key? key,
-    required this.detailActiveOrder,
+    required this.transaction,
   }) : super(key: key);
   
   @override
@@ -22,6 +26,25 @@ class DetailOrderScreen extends StatefulWidget {
 }
 
 class _DetailOrderScreenState extends State<DetailOrderScreen> {
+  List<CartClasses> detailTransaction = [];
+  
+  @override
+  void initState() {
+    super.initState();
+    
+    initLoad();
+  }
+  
+  void initLoad() async {
+    if(widget.transaction.id != null) {
+      await LocalDB().readDetailTransaction(widget.transaction.id!).then((detail) {
+        setState(() {
+          detailTransaction = detail;
+        });
+      });
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,12 +82,12 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           GlobalText(
-                            content: widget.detailActiveOrder.orderCode ?? 'Unknown Code',
+                            content: widget.transaction.username ?? 'Unknown User',
                             size: 18.0,
                             isBold: true,
                           ),
                           GlobalText(
-                            content: widget.detailActiveOrder.date != null ? DateFormat('dd MMMM yyyy').format(widget.detailActiveOrder.date!) : 'Unknown Date',
+                            content: widget.transaction.date != null ? DateFormat('dd MMMM yyyy').format(widget.transaction.date!) : 'Unknown Date',
                             size: 16.0,
                             align: TextAlign.start,
                             padding: const GlobalPaddingClass(
@@ -72,25 +95,45 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                             ),
                           ),
                           GlobalText(
-                            content: 'Receipent: ${widget.detailActiveOrder.receipent ?? '-'}',
+                            content: 'Payment: ${widget.transaction.payment ?? 'Unknown Payment'}',
                             size: 16.0,
                             align: TextAlign.start,
                             padding: const GlobalPaddingClass(
                               paddingTop: 10.0,
                             ),
                           ),
+                          widget.transaction.payment != null && widget.transaction.payment == 'transfer' ?
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              GlobalText(
+                                content: 'Receipent: ${widget.transaction.receipent ?? 'Unknown Receipent'}',
+                                size: 16.0,
+                                align: TextAlign.start,
+                                padding: const GlobalPaddingClass(
+                                  paddingTop: 10.0,
+                                ),
+                              ),
+                              GlobalText(
+                                content: 'Address: ${widget.transaction.address ?? 'Unknown Address'}',
+                                size: 16.0,
+                                align: TextAlign.start,
+                              )
+                            ],
+                          ) :
+                          const Material(),
                         ],
                       ),
                     ),
                   ),
                 ),
                 Expanded(
-                  child: widget.detailActiveOrder.detailOrder != null && widget.detailActiveOrder.detailOrder!.isNotEmpty ?
+                  child: detailTransaction.isNotEmpty ?
                   ListView.builder(
-                    itemCount: widget.detailActiveOrder.detailOrder!.length,
+                    itemCount: detailTransaction.length,
                     itemBuilder: (BuildContext listContext, int index) {
                       return DetailOrderItem(
-                        orderItem: widget.detailActiveOrder.detailOrder![index],
+                        orderItem: detailTransaction[index],
                       );
                     },
                   ) :
@@ -104,10 +147,24 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                     ),
                   ),
                 ),
-                widget.detailActiveOrder.detailOrder != null && widget.detailActiveOrder.detailOrder!.isNotEmpty ?
+                detailTransaction.isNotEmpty ?
                 GlobalElevatedButton(
                   onPressed: () {
+                    GlobalDialog(context: context, message: 'Complete this order, Are you sure?').optionDialog(() async {
+                      if(widget.transaction.id != null) {
+                        await LocalDB().completeOrder(widget.transaction.id!).then((result) {
+                          if(result) {
+                            GlobalRoute(context: context).back(true);
+                          }
+                        });
+                      } else {
+                        GlobalDialog(context: context, message: 'Failed to complete this transaction').okDialog(() {
 
+                        });
+                      }
+                    }, () {
+
+                    });
                   },
                   title: 'Complete Order',
                   btnColor: GlobalColor.accentColor,
@@ -125,5 +182,10 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/order_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/services/local_db.dart';
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<ProductClasses> productDisplayList = [];
   List<CartClasses> cartItemList = [];
-  List<ActiveOrderClass> activeOrderList = [];
+  List<TransactionClasses> activeOrderList = [];
   
   @override
   void initState() {
@@ -36,21 +36,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void initLoad() async {
-    await SharedPref().readAuthorization().then((UserClasses? user) {
+    await SharedPref().readAuthorization().then((UserClasses? user) async {
       if(user != null) {
         setState(() {
           role = user.role;
         });
-      }
-    });
 
-    await LocalDB().readAllProduct().then((product) {
-      for(int i = 0; i < product.length; i++) {
-        setState(() {
-          productDisplayList.add(
-            product[i],
-          );
-        });
+        if(user.role == 'user') {
+          await LocalDB().readAllProduct().then((product) {
+            setState(() {
+              productDisplayList = product;
+            });
+          });
+        } else {
+          await LocalDB().readAllTransaction().then((transaction) {
+            setState(() {
+              activeOrderList = transaction;
+            });
+          });
+        }
       }
     });
   }
@@ -74,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
               AdminHomeFragment(
                 activeOrder: activeOrderList,
                 onRefresh: () {
-
+                  initLoad();
                 },
               ) :
               UserHomeFragment(
@@ -143,6 +147,9 @@ class _HomeScreenState extends State<HomeScreen> {
               cartItemList[qtyChange[0]].totalQty = qtyChange[1];
             }
           });
+        },
+        isClear: () {
+          cartItemList.clear();
         },
       ),
     );

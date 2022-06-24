@@ -17,11 +17,13 @@ import 'package:sikoopi_app/widgets/specific/home_screen_widgets/drawer_item.dar
 class UserHomeDrawer extends StatelessWidget {
   final List<CartClasses> orderList;
   final Function onChangeQty;
+  final Function isClear;
 
   const UserHomeDrawer({
     Key? key,
     required this.orderList,
     required this.onChangeQty,
+    required this.isClear,
   }) : super(key: key);
 
   @override
@@ -70,7 +72,9 @@ class UserHomeDrawer extends StatelessWidget {
                                 onChangeQty(qtyChange);
                               },
                             ), (callback) {
-
+                              if(callback != null && callback) {
+                                isClear();
+                              }
                             });
                           },
                         ),
@@ -80,7 +84,9 @@ class UserHomeDrawer extends StatelessWidget {
                           onPressed: () {
                             GlobalRoute(context: context).back(null);
 
-                            GlobalRoute(context: context).moveTo(const HistoryScreen(), (callback) {
+                            GlobalRoute(context: context).moveTo(const HistoryScreen(
+                              role: 'user',
+                            ), (callback) {
 
                             });
                           },
@@ -184,6 +190,19 @@ class AdminHomeDrawer extends StatelessWidget {
                           title: GlobalString.productText,
                           onPressed: () {
                             GlobalRoute(context: context).moveTo(const ProductScreen(), (callback) {
+
+                            });
+                          },
+                        ),
+                        DrawerItem(
+                          iconPath: 'history_icon.png',
+                          title: 'Transaction',
+                          onPressed: () {
+                            GlobalRoute(context: context).back(null);
+
+                            GlobalRoute(context: context).moveTo(const HistoryScreen(
+                              role: 'admin',
+                            ), (callback) {
 
                             });
                           },
