@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
@@ -71,10 +73,19 @@ class HistoryDetailFragment extends StatelessWidget {
                 padding: const GlobalPaddingClass(
                   paddingLeft: 10.0,
                   paddingRight: 10.0,
+                ),
+              ),
+              GlobalText(
+                content: 'Payment: ${transaction.payment ?? "Unknown Payment"}',
+                size: 16.0,
+                align: TextAlign.start,
+                padding: const GlobalPaddingClass(
+                  paddingLeft: 10.0,
+                  paddingRight: 10.0,
                   paddingBottom: 10.0,
                 ),
               ),
-              transaction.payment != null && transaction.payment == 'transfer' && transaction.receipent != null ?
+              transaction.payment != null && transaction.payment == 'Transfer' && transaction.receipent != null ?
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -132,12 +143,33 @@ class HistoryDetailFragment extends StatelessWidget {
                   align: TextAlign.center,
                 ),
               ),
-              transaction.payment != null && transaction.payment == 'transfer' && transaction.transferReceiptImage != null ?
-              Card(
-                elevation: 5.0,
+              transaction.payment != null && transaction.payment == 'Transfer' && transaction.transferReceiptImage != null ?
+              Center(
                 child: InkWell(
                   onTap: () {
-
+                    showBottomSheet(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.0,),
+                          topRight: Radius.circular(20.0,),
+                        ),
+                      ),
+                      builder: (BuildContext imgContext) {
+                        return GlobalPadding(
+                          paddingClass: const GlobalPaddingClass(
+                            paddingLeft: 30.0,
+                            paddingTop: 30.0,
+                            paddingRight: 30.0,
+                            paddingBottom: 30.0,
+                          ),
+                          content: Image.file(
+                            File(transaction.transferReceiptImage!.substring(8)),
+                            fit: BoxFit.contain,
+                          ),
+                        );
+                      },
+                    );
                   },
                   customBorder: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0,),
@@ -150,6 +182,7 @@ class HistoryDetailFragment extends StatelessWidget {
                       paddingBottom: 10.0,
                     ),
                     content: Row(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

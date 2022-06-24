@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
@@ -65,8 +67,6 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                 const OrderCartScreenHeader(),
                 GlobalPadding(
                   paddingClass: const GlobalPaddingClass(
-                    paddingLeft: 10.0,
-                    paddingRight: 10.0,
                     paddingTop: 10.0,
                     paddingBottom: 10.0,
                   ),
@@ -102,7 +102,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                               paddingTop: 10.0,
                             ),
                           ),
-                          widget.transaction.payment != null && widget.transaction.payment == 'transfer' ?
+                          widget.transaction.payment != null && widget.transaction.payment == 'Transfer' ?
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -118,7 +118,68 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                                 content: 'Address: ${widget.transaction.address ?? 'Unknown Address'}',
                                 size: 16.0,
                                 align: TextAlign.start,
-                              )
+                              ),
+                              Builder(
+                                builder: (BuildContext detailContext) {
+                                  return InkWell(
+                                    onTap: () {
+                                      showBottomSheet(
+                                        context: detailContext,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20.0,),
+                                            topRight: Radius.circular(20.0,),
+                                          ),
+                                        ),
+                                        builder: (BuildContext imgContext) {
+                                          return GlobalPadding(
+                                            paddingClass: const GlobalPaddingClass(
+                                              paddingLeft: 30.0,
+                                              paddingTop: 30.0,
+                                              paddingRight: 30.0,
+                                              paddingBottom: 30.0,
+                                            ),
+                                            content: Image.file(
+                                              File(widget.transaction.transferReceiptImage!.substring(8)),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    customBorder: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4.0,),
+                                    ),
+                                    child: GlobalPadding(
+                                      paddingClass: const GlobalPaddingClass(
+                                        paddingLeft: 10.0,
+                                        paddingTop: 10.0,
+                                        paddingRight: 10.0,
+                                        paddingBottom: 10.0,
+                                      ),
+                                      content: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.image,
+                                            color: GlobalColor.defaultBlue,
+                                          ),
+                                          GlobalText(
+                                            content: 'See Transfer Receipt',
+                                            color: GlobalColor.defaultBlue,
+                                            padding: const GlobalPaddingClass(
+                                              paddingLeft: 20.0,
+                                              paddingRight: 20.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ) :
                           const Material(),
@@ -147,7 +208,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                     ),
                   ),
                 ),
-                detailTransaction.isNotEmpty ?
+                widget.transaction.status != 'Completed' && detailTransaction.isNotEmpty ?
                 GlobalElevatedButton(
                   onPressed: () {
                     GlobalDialog(context: context, message: 'Complete this order, Are you sure?').optionDialog(() async {

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
+import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sikoopi_app/services/local_db.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
+import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_detail_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_fragment.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_screen_header.dart';
@@ -99,9 +101,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     },
                   ),
                   Expanded(
-                    child: ListView(
+                    child: selectedItem != null ?
+                    detailTransactionList.isNotEmpty ?
+                    ListView(
                       children: [
-                        selectedItem != null ?
                         HistoryDetailFragment(
                           transaction: selectedItem!,
                           detailTransaction: detailTransactionList,
@@ -111,7 +114,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               selectedItem = null;
                             });
                           },
-                        ) :
+                        ),
+                      ],
+                    ) :
+                    Center(
+                      child: GlobalText(
+                        content: "There's no product ordered...",
+                        size: 30.0,
+                        color: GlobalColor.defaultWhite,
+                        isBold: true,
+                        align: TextAlign.center,
+                      ),
+                    ) :
+                    transactionList.isNotEmpty ?
+                    ListView(
+                      children: [
                         HistoryFragment(
                           transactionList: transactionList,
                           onPressed: (TransactionClasses? transactionItem) async {
@@ -128,6 +145,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           },
                         ),
                       ],
+                    ) :
+                    Center(
+                      child: GlobalText(
+                        content: "There's no order history...",
+                        size: 30.0,
+                        color: GlobalColor.defaultWhite,
+                        isBold: true,
+                        align: TextAlign.center,
+                      ),
                     ),
                   ),
                 ],

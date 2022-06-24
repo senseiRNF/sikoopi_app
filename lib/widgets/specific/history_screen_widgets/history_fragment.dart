@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
-import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
-import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_item.dart';
 
 class HistoryFragment extends StatelessWidget {
@@ -24,8 +22,7 @@ class HistoryFragment extends StatelessWidget {
         paddingRight: 10.0,
         paddingBottom: 10.0,
       ),
-      content: transactionList.isNotEmpty ?
-      ListView.builder(
+      content: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: transactionList.length,
@@ -37,15 +34,6 @@ class HistoryFragment extends StatelessWidget {
             },
           );
         },
-      ) :
-      Center(
-        child: GlobalText(
-          content: "There's no order history...",
-          size: 30.0,
-          color: GlobalColor.defaultWhite,
-          isBold: true,
-          align: TextAlign.center,
-        ),
       ),
     );
   }

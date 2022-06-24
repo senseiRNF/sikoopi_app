@@ -129,8 +129,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                                                 id: userId,
                                                 username: nameTEC.text,
                                                 phoneNo: phoneTEC.text,
-                                                email: email,
                                                 address: addressTEC.text,
+                                                email: email,
                                                 role: role,
                                               ),
                                             ).then((writeResult) {

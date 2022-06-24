@@ -60,10 +60,19 @@ class HistoryItem extends StatelessWidget {
               padding: const GlobalPaddingClass(
                 paddingLeft: 10.0,
                 paddingRight: 10.0,
+              ),
+            ),
+            GlobalText(
+              content: 'Payment: ${transactionItem.payment ?? "Unknown Payment"}',
+              size: 16.0,
+              align: TextAlign.start,
+              padding: const GlobalPaddingClass(
+                paddingLeft: 10.0,
+                paddingRight: 10.0,
                 paddingBottom: 10.0,
               ),
             ),
-            transactionItem.payment != null && transactionItem.payment == 'transfer' && transactionItem.receipent != null ?
+            transactionItem.payment != null && transactionItem.payment == 'Transfer' && transactionItem.receipent != null ?
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

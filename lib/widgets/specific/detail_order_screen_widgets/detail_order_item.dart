@@ -15,9 +15,6 @@ class DetailOrderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0,),
-      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
