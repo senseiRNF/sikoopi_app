@@ -6,12 +6,12 @@ import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class ProductDisplayItem extends StatelessWidget {
-  final ProductClasses productList;
+  final ProductClasses product;
   final Function onPressed;
   
   const ProductDisplayItem({
     Key? key,
-    required this.productList,
+    required this.product,
     required this.onPressed,
   }) : super(key: key);
 
@@ -33,22 +33,26 @@ class ProductDisplayItem extends StatelessWidget {
           children: [
             Expanded(
               child: Image.asset(
-                productList.imagePath ?? '',
+                product.imagePath ?? '',
                 fit: BoxFit.contain,
               ),
             ),
             GlobalText(
-              content: productList.name ?? 'Unknown',
+              content: product.name ?? 'Unknown',
               size: 16.0,
               isBold: true,
               align: TextAlign.center,
             ),
             GlobalText(
-              content: productList.uom ?? 'Unknown',
+              content: product.uom ?? 'Unknown',
               align: TextAlign.center,
             ),
             GlobalText(
-              content: "Rp.${NumberFormat('#,###', 'en_ID').format(productList.price ?? 0).replaceAll(',', '.')},-",
+              content: "Rp.${NumberFormat('#,###', 'en_ID').format(product.price ?? 0).replaceAll(',', '.')},-",
+              align: TextAlign.center,
+            ),
+            GlobalText(
+              content: "Stock: ${NumberFormat('#,###', 'en_ID').format(product.stock ?? 0).replaceAll(',', '.')}",
               align: TextAlign.center,
               padding: const GlobalPaddingClass(
                 paddingBottom: 10.0,

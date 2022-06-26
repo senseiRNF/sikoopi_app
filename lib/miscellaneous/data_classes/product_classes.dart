@@ -4,7 +4,7 @@ class ProductClasses {
   String? uom;
   int? price;
   String? imagePath;
-  bool? isActive;
+  int? stock;
   
   ProductClasses({
     this.id,
@@ -12,6 +12,6 @@ class ProductClasses {
     this.uom,
     this.price,
     this.imagePath,
-    this.isActive,
+    this.stock,
   });
 }

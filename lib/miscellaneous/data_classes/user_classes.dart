@@ -6,7 +6,6 @@ class UserClasses {
   String? email;
   String? pass;
   String? role;
-  bool? isActive;
 
   UserClasses({
     this.id,
@@ -16,6 +15,5 @@ class UserClasses {
     this.email,
     this.pass,
     this.role,
-    this.isActive,
   });
 }

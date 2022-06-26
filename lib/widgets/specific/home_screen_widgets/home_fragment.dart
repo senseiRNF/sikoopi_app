@@ -32,7 +32,7 @@ class UserHomeFragment extends StatelessWidget {
         itemCount: productDisplayList.length,
         itemBuilder: (BuildContext gridContext, int index) {
           return ProductDisplayItem(
-            productList: productDisplayList[index],
+            product: productDisplayList[index],
             onPressed: () => onPressed(productDisplayList[index]),
           );
         },

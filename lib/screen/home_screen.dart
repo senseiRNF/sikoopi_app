@@ -84,33 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
               UserHomeFragment(
                 productDisplayList: productDisplayList,
                 onPressed: (ProductClasses selectedItem) {
-                  if(cartItemList.isEmpty) {
-                    setState(() {
-                      cartItemList.add(
-                        CartClasses(
-                          id: selectedItem.id,
-                          name: selectedItem.name,
-                          uom: selectedItem.uom,
-                          price: selectedItem.price,
-                          imagePath: selectedItem.imagePath,
-                          totalQty: 1,
-                        ),
-                      );
-                    });
-                  } else {
-                    bool add = true;
-
-                    for(int i = 0; i < cartItemList.length; i++) {
-                      if(cartItemList[i].id == selectedItem.id) {
-                        add = false;
-
-                        setState(() {
-                          cartItemList[i].totalQty = cartItemList[i].totalQty! + 1;
-                        });
-                      }
-                    }
-
-                    if(add) {
+                  if(selectedItem.stock != null && selectedItem.stock! > 0) {
+                    if(cartItemList.isEmpty) {
                       setState(() {
                         cartItemList.add(
                           CartClasses(
@@ -123,12 +98,45 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       });
+                    } else {
+                      bool add = true;
+
+                      for(int i = 0; i < cartItemList.length; i++) {
+                        if(cartItemList[i].id == selectedItem.id) {
+                          add = false;
+
+                          if(selectedItem.stock != null && selectedItem.stock! > 0) {
+                            setState(() {
+                              cartItemList[i].totalQty = cartItemList[i].totalQty! + 1;
+                            });
+                          }
+                        }
+                      }
+
+                      if(add) {
+                        setState(() {
+                          cartItemList.add(
+                            CartClasses(
+                              id: selectedItem.id,
+                              name: selectedItem.name,
+                              uom: selectedItem.uom,
+                              price: selectedItem.price,
+                              imagePath: selectedItem.imagePath,
+                              totalQty: 1,
+                            ),
+                          );
+                        });
+                      }
                     }
+
+                    GlobalDialog(context: context, message: 'Success add to Cart').okDialog(() {
+
+                    });
+                  } else {
+                    GlobalDialog(context: context, message: 'Failed to add to Cart, Stock is empty').okDialog(() {
+
+                    });
                   }
-
-                  GlobalDialog(context: context, message: 'Success add to Cart').okDialog(() {
-
-                  });
                 },
               ),
             ),

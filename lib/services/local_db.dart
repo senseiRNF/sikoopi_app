@@ -21,36 +21,35 @@ class LocalDB {
 
     Database database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(
-        'CREATE TABLE user (id INTEGER PRIMARY KEY, name TEXT, phone TEXT, address TEXT, email TEXT, pass TEXT, role TEXT, isActive TEXT)',
+        'CREATE TABLE user (id INTEGER PRIMARY KEY, name TEXT, phone TEXT, address TEXT, email TEXT, pass TEXT, role TEXT)',
       );
 
       await db.execute(
-        'CREATE TABLE product (id INTEGER PRIMARY KEY, name TEXT, uom TEXT, price INTEGER, imagePath TEXT, isActive TEXT)',
+        'CREATE TABLE product (id INTEGER PRIMARY KEY, name TEXT, uom TEXT, price INTEGER, imagePath TEXT, stock INTEGER)',
       );
 
       await db.execute(
-        'CREATE TABLE transactions (id INTEGER PRIMARY KEY, userId INTEGER, username TEXT, date TEXT, total INTEGER, payment TEXT, receipent TEXT, address TEXT, status TEXT, transferReceiptImage String, isActive TEXT)',
+        'CREATE TABLE transactions (id INTEGER PRIMARY KEY, userId INTEGER, username TEXT, date TEXT, total INTEGER, payment TEXT, receipent TEXT, address TEXT, status TEXT, transferReceiptImage String)',
       );
 
       await db.execute(
-        'CREATE TABLE detail_transactions (id INTEGER PRIMARY KEY, transactionId INTEGER, productName TEXT, productUom TEXT, productPrice INTEGER, productImage TEXT, productQty INTEGER, isActive TEXT)',
+        'CREATE TABLE detail_transactions (id INTEGER PRIMARY KEY, transactionId INTEGER, productName TEXT, productUom TEXT, productPrice INTEGER, productImage TEXT, productQty INTEGER)',
       );
 
       // Insert initial data
       await db.execute(
-        'INSERT INTO user (name, phone, email, pass, role, isActive) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO user (name, phone, email, pass, role) VALUES (?, ?, ?, ?, ?)',
         [
           'Admin Nadia',
           '082322196306',
           'nadia.sikoopi@gmail.com',
           'p4ssw0rd',
           'admin',
-          'active',
         ],
       );
 
       await db.execute(
-        'INSERT INTO user (name, phone, address, email, pass, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO user (name, phone, address, email, pass, role) VALUES (?, ?, ?, ?, ?, ?)',
         [
           'User Test',
           '0123456789',
@@ -58,88 +57,87 @@ class LocalDB {
           'user.test@sikoopi.com',
           'p4ssw0rd',
           'user',
-          'active',
         ],
       );
 
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Gula Rose Brand',
           '1 Kg',
           20000,
           '${GlobalString.assetImagePath}/product_icon/gula_pasir.png',
-          'active',
+          0
         ],
       );
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Minyak Goreng SunCo',
           '1 L',
           25000,
           '${GlobalString.assetImagePath}/product_icon/minyak_goreng.png',
-          'active',
+          0
         ],
       );
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Sabun Lifebuoy Refill',
           '900 Ml',
           50000,
           '${GlobalString.assetImagePath}/product_icon/sabun_cair.png',
-          'active',
+          0
         ],
       );
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Molto Pewangi',
           '750 Ml',
           30000,
           '${GlobalString.assetImagePath}/product_icon/pewangi_pakaian.png',
-          'active',
+          0
         ],
       );
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Beras Sania Premium',
           '5 Kg',
           60000,
           '${GlobalString.assetImagePath}/product_icon/beras.png',
-          'active',
+          0
         ],
       );
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Telur',
           '10 Btr',
           25000,
           '${GlobalString.assetImagePath}/product_icon/telur.png',
-          'active',
+          0
         ],
       );
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Tepung Segitiga Biru',
           '1 Kg',
           15000,
           '${GlobalString.assetImagePath}/product_icon/terigu.png',
-          'active',
+          0
         ],
       );
       await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           'Sunlight',
           '750 Ml',
           25000,
           '${GlobalString.assetImagePath}/product_icon/sabun_cuci_piring.png',
-          'active',
+          0
         ],
       );
     });
@@ -154,7 +152,7 @@ class LocalDB {
 
     await openDB().then((db) async {
       await db.rawInsert(
-        'INSERT INTO user (name, phone, email, address, pass, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO user (name, phone, email, address, pass, role) VALUES (?, ?, ?, ?, ?, ?)',
         [
           user.username,
           user.phoneNo,
@@ -162,7 +160,6 @@ class LocalDB {
           user.address,
           user.pass,
           user.role,
-          user.isActive,
         ],
       ).then((id) {
         result = true;
@@ -178,13 +175,13 @@ class LocalDB {
 
     await openDB().then((db) async {
       await db.rawInsert(
-        'INSERT INTO product (name, uom, price, imagePath, isActive) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
         [
           product.name,
           product.uom,
           product.price,
           product.imagePath,
-          product.isActive,
+          product.stock,
         ],
       ).then((_) {
         result = true;
@@ -199,7 +196,7 @@ class LocalDB {
 
     await openDB().then((db) async {
       await db.rawInsert(
-        'INSERT INTO transactions (userId, username, date, total, payment, receipent, address, status, transferReceiptImage, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO transactions (userId, username, date, total, payment, receipent, address, status, transferReceiptImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           transactions.userId,
           transactions.username,
@@ -210,14 +207,13 @@ class LocalDB {
           transactions.address,
           'Waiting',
           transactions.transferReceiptImage,
-          'active',
         ],
       ).then((int transactionId) async {
         bool success = true;
 
         for(int i = 0; i < cart.length; i++) {
           await db.rawInsert(
-            'INSERT INTO detail_transactions (transactionId, productName, productUom, productPrice, productImage, productQty, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO detail_transactions (transactionId, productName, productUom, productPrice, productImage, productQty) VALUES (?, ?, ?, ?, ?, ?)',
             [
               transactionId,
               cart[i].name,
@@ -225,7 +221,6 @@ class LocalDB {
               cart[i].price,
               cart[i].imagePath,
               cart[i].totalQty,
-              'active',
             ],
           ).catchError((e) {
             success = false;
@@ -260,7 +255,6 @@ class LocalDB {
                 email: "${result[i]['email']}",
                 address: "${result[i]['address']}",
                 role: "${result[i]['role']}",
-                isActive: result[i]['isActive'] == 'active' ? true : false,
               ),
             );
           }
@@ -287,7 +281,7 @@ class LocalDB {
                 uom: "${result[i]['uom']}",
                 price: int.parse("${result[i]['price']}"),
                 imagePath: "${result[i]['imagePath']}",
-                isActive: result[i]['isActive'] == 'active' ? true : false,
+                stock: int.parse("${result[i]['stock']}"),
               ),
             );
           }
@@ -319,7 +313,6 @@ class LocalDB {
                 address: "${result[i]['address']}",
                 status: "${result[i]['status']}",
                 transferReceiptImage: "${result[i]['transferReceiptImage']}",
-                isActive: result[i]['isActive'] == 'active' ? true : false,
               ),
             );
           }
@@ -349,7 +342,6 @@ class LocalDB {
               email: "${result[i]['email']}",
               address: "${result[i]['address']}",
               role: "${result[i]['role']}",
-              isActive: result[i]['isActive'] == 'active' ? true : false,
             );
           }
         }
@@ -377,7 +369,7 @@ class LocalDB {
               uom: "${result[i]['uom']}",
               price: int.parse("${result[i]['price']}"),
               imagePath: "${result[i]['imagePath']}",
-              isActive: result[i]['isActive'] == 'active' ? true : false,
+              stock: int.parse("${result[i]['stock']}"),
             );
           }
         }
@@ -436,7 +428,6 @@ class LocalDB {
               email: "${result[i]['email']}",
               address: "${result[i]['address']}",
               role: "${result[i]['role']}",
-              isActive: result[i]['isActive'] == 'active' ? true : false,
             );
           }
         }
@@ -470,7 +461,6 @@ class LocalDB {
                 address: "${result[i]['address']}",
                 status: "${result[i]['status']}",
                 transferReceiptImage: "${result[i]['transferReceiptImage']}",
-                isActive: result[i]['isActive'] == 'active' ? true : false,
               ),
             );
           }
@@ -493,6 +483,27 @@ class LocalDB {
           user.phoneNo,
           user.address,
           user.id,
+        ],
+      ).then((_) {
+        result = true;
+      });
+    });
+
+    return result;
+  }
+
+  Future<bool> updateProduct(ProductClasses product) async {
+    bool result = false;
+
+    await openDB().then((db) async {
+      await db.rawUpdate(
+        'UPDATE product SET name = ?, uom = ?, price = ?, stock = ? WHERE id = ?',
+        [
+          product.name,
+          product.uom,
+          product.price,
+          product.stock,
+          product.id,
         ],
       ).then((_) {
         result = true;

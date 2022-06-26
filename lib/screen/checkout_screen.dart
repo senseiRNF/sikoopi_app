@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
@@ -135,7 +136,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       transferReceiptImage: savingResult['filePath'],
                     ),
                     widget.orderList,
-                  ).then((writeResult) {
+                  ).then((writeResult) async {
                     if(writeResult) {
                       setState(() {
                         stage = stage + 1;
@@ -287,12 +288,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     transferReceiptImage: '',
                                   ),
                                   widget.orderList,
-                                ).then((result) {
-                                  if(result) {
-                                    setState(() {
-                                      stage = stage + 2;
-                                    });
-                                  }
+                                ).then((result) async {
+                                  await LocalDB().updateProduct(
+                                    ProductClasses(
+
+                                    ),
+                                  ).then((updateResult) {
+                                    if(updateResult) {
+                                      setState(() {
+                                        stage = stage + 2;
+                                      });
+                                    }
+                                  });
                                 });
                               } else {
                                 setState(() {
