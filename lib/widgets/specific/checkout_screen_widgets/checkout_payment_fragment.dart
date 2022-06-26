@@ -84,7 +84,7 @@ class CheckoutPaymentFragment extends StatelessWidget {
                 paddingBottom: 20.0,
               ),
               content: GlobalText(
-                content: 'Bank:\n"Example Bank" "Example Account No" - a.n "Example Account Name"',
+                content: 'Bank:\nMANDIRI\n8067 7654 5678\nA.N KOPERASI BPS JATENG',
                 size: 16.0,
               ),
             ),
