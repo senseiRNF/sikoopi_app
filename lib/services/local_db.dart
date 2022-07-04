@@ -4,7 +4,6 @@ import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
-import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LocalDB {
@@ -16,7 +15,7 @@ class LocalDB {
     return path;
   }
 
-  Future<Database> openDB () async {
+  Future<Database> openDB() async {
     String path = await initDB();
 
     Database database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
@@ -25,7 +24,19 @@ class LocalDB {
       );
 
       await db.execute(
-        'CREATE TABLE product (id INTEGER PRIMARY KEY, name TEXT, uom TEXT, price INTEGER, imagePath TEXT, stock INTEGER)',
+        'CREATE TABLE category (id INTEGER PRIMARY KEY, categoryName TEXT)',
+      );
+
+      await db.execute(
+        'CREATE TABLE product (id INTEGER PRIMARY KEY, name TEXT, uom TEXT, price INTEGER, imagePath TEXT, stock INTEGER, categoryId INTEGER, sellCount INTEGER)',
+      );
+
+      await db.execute(
+        'CREATE TABLE opname (id INTEGER, date TEXT, userId INTEGER, userName TEXT)',
+      );
+
+      await db.execute(
+        'CREATE TABLE detail_opname (id INTEGER, opnameId INTEGER, productId INTEGER, productName TEXT, qty INTEGER)',
       );
 
       await db.execute(
@@ -57,87 +68,6 @@ class LocalDB {
           'user.test@sikoopi.com',
           'p4ssw0rd',
           'user',
-        ],
-      );
-
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Gula Rose Brand',
-          '1 Kg',
-          20000,
-          '${GlobalString.assetImagePath}/product_icon/gula_pasir.png',
-          0
-        ],
-      );
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Minyak Goreng SunCo',
-          '1 L',
-          25000,
-          '${GlobalString.assetImagePath}/product_icon/minyak_goreng.png',
-          0
-        ],
-      );
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Sabun Lifebuoy Refill',
-          '900 Ml',
-          50000,
-          '${GlobalString.assetImagePath}/product_icon/sabun_cair.png',
-          0
-        ],
-      );
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Molto Pewangi',
-          '750 Ml',
-          30000,
-          '${GlobalString.assetImagePath}/product_icon/pewangi_pakaian.png',
-          0
-        ],
-      );
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Beras Sania Premium',
-          '5 Kg',
-          60000,
-          '${GlobalString.assetImagePath}/product_icon/beras.png',
-          0
-        ],
-      );
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Telur',
-          '10 Btr',
-          25000,
-          '${GlobalString.assetImagePath}/product_icon/telur.png',
-          0
-        ],
-      );
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Tepung Segitiga Biru',
-          '1 Kg',
-          15000,
-          '${GlobalString.assetImagePath}/product_icon/terigu.png',
-          0
-        ],
-      );
-      await db.execute(
-        'INSERT INTO product (name, uom, price, imagePath, stock) VALUES (?, ?, ?, ?, ?)',
-        [
-          'Sunlight',
-          '750 Ml',
-          25000,
-          '${GlobalString.assetImagePath}/product_icon/sabun_cuci_piring.png',
-          0
         ],
       );
     });

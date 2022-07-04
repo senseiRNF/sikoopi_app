@@ -5,14 +5,8 @@ import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class LoginScreenHeader extends StatelessWidget {
-  final int selectedMenu;
-  final Function onChange;
 
-  const LoginScreenHeader({
-    Key? key,
-    required this.selectedMenu,
-    required this.onChange,
-  }) : super(key: key);
+  const LoginScreenHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,46 +50,6 @@ class LoginScreenHeader extends StatelessWidget {
               padding: const GlobalPaddingClass(
                 paddingBottom: 20.0,
               ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => onChange(0),
-                      child: GlobalText(
-                        content: 'Login',
-                        size: 20.0,
-                        color: selectedMenu == 0 ? GlobalColor.accentColor : GlobalColor.defaultWhite,
-                        align: TextAlign.center,
-                        padding: const GlobalPaddingClass(
-                          paddingTop: 10.0,
-                          paddingBottom: 10.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => onChange(1),
-                      child: GlobalText(
-                        content: 'Sign Up',
-                        size: 20.0,
-                        color: selectedMenu != 0 ? GlobalColor.accentColor : GlobalColor.defaultWhite,
-                        align: TextAlign.center,
-                        padding: const GlobalPaddingClass(
-                          paddingTop: 10.0,
-                          paddingBottom: 10.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ],
         ),
