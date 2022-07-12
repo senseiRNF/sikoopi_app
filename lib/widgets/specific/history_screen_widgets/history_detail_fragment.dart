@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
+import 'package:sikoopi_app/services/api/transaction_services.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_detail_item.dart';
 
 class HistoryDetailFragment extends StatelessWidget {
-  final TransactionClasses transaction;
-  final List<CartClasses> detailTransaction;
+  final TransactionResponseData transaction;
+  final List<TransactionDetailResponseData> detailTransaction;
   final Function? onPressed;
 
   const HistoryDetailFragment({
@@ -44,7 +43,7 @@ class HistoryDetailFragment extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               GlobalText(
-                content: transaction.date != null ? DateFormat('dd-MM-yyyy').format(transaction.date!) : 'Unknown Date',
+                content: transaction.date != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(transaction.date!)) : 'Unknown Date',
                 size: 18.0,
                 isBold: true,
                 align: TextAlign.center,
@@ -112,7 +111,7 @@ class HistoryDetailFragment extends StatelessWidget {
               ) :
               const Material(),
               GlobalText(
-                content: 'Rp.${NumberFormat('#,###', 'en_ID').format(transaction.total).replaceAll(',', '.')}',
+                content: 'Rp.${NumberFormat('#,###', 'en_ID').format(int.parse(transaction.total!)).replaceAll(',', '.')}',
                 size: 20.0,
                 color: Colors.deepOrange,
                 isBold: true,

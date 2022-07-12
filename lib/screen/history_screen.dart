@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
-import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/api/transaction_services.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_detail_fragment.dart';
@@ -24,10 +22,10 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  List<TransactionClasses> transactionList = [];
-  List<CartClasses> detailTransactionList = [];
+  List<TransactionResponseData> transactionList = [];
+  List<TransactionDetailResponseData> detailTransactionList = [];
 
-  TransactionClasses? selectedItem;
+  TransactionResponseData? selectedItem;
 
   @override
   void initState() {
@@ -40,17 +38,33 @@ class _HistoryScreenState extends State<HistoryScreen> {
     await SharedPref().readAuthorization().then((auth) async {
       if(widget.role == 'user') {
         if(auth != null && auth.id != null) {
-          await LocalDB().readTransactionByUser(auth.id!).then((result) async {
+          await TransactionServices().readTransationByUser(auth.id!).then((dioResult) {
+            List<TransactionResponseData> listTemp = [];
+
+            if(dioResult != null && dioResult.data != null) {
+              for(int i = 0; i < dioResult.data!.length; i++) {
+                listTemp.add(dioResult.data![i]);
+              }
+            }
+
             setState(() {
-              transactionList = result;
+              transactionList = listTemp;
             });
           });
         }
       } else {
         if(auth != null && auth.id != null) {
-          await LocalDB().readAllTransaction().then((result) async {
+          await TransactionServices().readAllTransaction().then((dioResult) {
+            List<TransactionResponseData> listTemp = [];
+
+            if(dioResult != null && dioResult.data != null) {
+              for(int i = 0; i < dioResult.data!.length; i++) {
+                listTemp.add(dioResult.data![i]);
+              }
+            }
+
             setState(() {
-              transactionList = result;
+              transactionList = listTemp;
             });
           });
         }
@@ -131,12 +145,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       children: [
                         HistoryFragment(
                           transactionList: transactionList,
-                          onPressed: (TransactionClasses? transactionItem) async {
+                          onPressed: (TransactionResponseData? transactionItem) async {
                             if(transactionItem != null) {
                               if(transactionItem.id != null) {
-                                await LocalDB().readDetailTransaction(transactionItem.id!).then((detailTransaction) {
+                                await TransactionServices().readTransactionDetail(int.parse(transactionItem.id!)).then((dioResult) {
+                                  List<TransactionDetailResponseData> listTemp = [];
+
+                                  if(dioResult != null && dioResult.data != null) {
+                                    for(int i = 0; i < dioResult.data!.length; i++) {
+                                      listTemp.add(dioResult.data![i]);
+                                    }
+                                  }
+
                                   setState(() {
-                                    detailTransactionList = detailTransaction;
+                                    detailTransactionList = listTemp;
                                     selectedItem = transactionItem;
                                   });
                                 });

@@ -94,4 +94,90 @@ class GlobalDialog {
       }
     });
   }
+
+  void listCategory(List<String> listCategory, Function onSelect) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text(
+            'Select Category',
+          ),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height / 2,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: listCategory.length,
+                  itemBuilder: (BuildContext listContext, int index) {
+                    return ListTile(
+                      onTap: () {
+                        GlobalRoute(context: context).back(
+                          listCategory[index],
+                        );
+                      },
+                      title: Text(
+                        listCategory[index],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((dynamic dialogResult){
+      if(dialogResult != null) {
+        onSelect(dialogResult);
+      }
+    });
+  }
+
+  void listProductMenu(List<String> listProductMenu, Function onSelect) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text(
+            'Select Menu',
+          ),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height / 2,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: listProductMenu.length,
+                  itemBuilder: (BuildContext listContext, int index) {
+                    return ListTile(
+                      onTap: () {
+                        GlobalRoute(context: context).back(
+                          listProductMenu[index],
+                        );
+                      },
+                      title: Text(
+                        listProductMenu[index],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((dynamic dialogResult){
+      if(dialogResult != null) {
+        onSelect(dialogResult);
+      }
+    });
+  }
 }

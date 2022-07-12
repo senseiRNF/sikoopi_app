@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
+import 'package:sikoopi_app/services/api/transaction_services.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/specific/history_screen_widgets/history_item.dart';
 
 class HistoryFragment extends StatelessWidget {
-  final List<TransactionClasses> transactionList;
+  final List<TransactionResponseData> transactionList;
   final Function onPressed;
 
   const HistoryFragment({
@@ -29,7 +29,7 @@ class HistoryFragment extends StatelessWidget {
         itemBuilder: (BuildContext listContext, int index) {
           return HistoryItem(
             transactionItem: transactionList[index],
-            onPressed: (TransactionClasses? transactionItem) {
+            onPressed: (TransactionResponseData? transactionItem) {
               onPressed(transactionItem);
             },
           );

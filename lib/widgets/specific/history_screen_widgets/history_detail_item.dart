@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
+import 'package:sikoopi_app/services/api/transaction_services.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
 
 class HistoryDetailItem extends StatelessWidget {
-  final CartClasses transactionItem;
+  final TransactionDetailResponseData transactionItem;
 
   const HistoryDetailItem({
     Key? key,
@@ -28,7 +28,7 @@ class HistoryDetailItem extends StatelessWidget {
               paddingBottom: 10.0,
             ),
             content: Image.asset(
-              transactionItem.imagePath ?? '',
+              transactionItem.productImage ?? '',
               fit: BoxFit.contain,
             ),
           ),
@@ -38,18 +38,18 @@ class HistoryDetailItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GlobalText(
-                content: transactionItem.name ?? 'Unknown Name',
+                content: transactionItem.productName ?? 'Unknown Name',
                 size: 18.0,
                 isBold: true,
                 align: TextAlign.center,
               ),
               GlobalText(
-                content: transactionItem.uom ?? 'Unknown UOM',
+                content: transactionItem.productUom ?? 'Unknown UOM',
                 size: 16.0,
                 align: TextAlign.center,
               ),
               GlobalText(
-                content: "Rp.${NumberFormat('#,###', 'en_ID').format(transactionItem.price).replaceAll(',', '.')},-",
+                content: "Rp.${NumberFormat('#,###', 'en_ID').format(int.parse(transactionItem.productPrice!)).replaceAll(',', '.')},-",
                 size: 16.0,
                 align: TextAlign.center,
                 padding: const GlobalPaddingClass(
@@ -60,14 +60,14 @@ class HistoryDetailItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GlobalText(
-                      content: 'Qty: ${transactionItem.totalQty}',
+                      content: 'Qty: ${transactionItem.productQty!}',
                       size: 16.0,
                       align: TextAlign.center,
                     ),
                   ),
                   Expanded(
                     child: GlobalText(
-                      content: transactionItem.totalQty != null && transactionItem.price != null ? "Rp.${NumberFormat('#,###', 'en_ID').format(transactionItem.totalQty! * transactionItem.price!).replaceAll(',', '.')},-" : 'Unknown Total',
+                      content: transactionItem.productQty != null && transactionItem.productPrice != null ? "Rp.${NumberFormat('#,###', 'en_ID').format(int.parse(transactionItem.productQty!) * int.parse(transactionItem.productPrice!)).replaceAll(',', '.')},-" : 'Unknown Total',
                       size: 16.0,
                       align: TextAlign.center,
                     ),

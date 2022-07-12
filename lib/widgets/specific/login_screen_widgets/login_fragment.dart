@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/screen/home_screen.dart';
-import 'package:sikoopi_app/services/local_db.dart';
-import 'package:sikoopi_app/services/shared_preferences.dart';
+import 'package:sikoopi_app/services/api/auth_services.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_input_field.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
@@ -72,31 +70,18 @@ class LoginFragment extends StatelessWidget {
         GlobalElevatedButton(
           onPressed: () async {
             if(emailTEC.text != '' && passTEC.text != '') {
-              await LocalDB().readLoginUser(emailTEC.text, passTEC.text).then((loginResult) async {
-                if(loginResult != null) {
-                  await SharedPref().writeAuthorization(
-                    UserClasses(
-                      id: loginResult.id,
-                      username: loginResult.username,
-                      phoneNo: loginResult.phoneNo,
-                      email: loginResult.email,
-                      address: loginResult.address,
-                      role: loginResult.role,
-                    ),
-                  ).then((authResult) {
-                    if(authResult) {
-                      GlobalRoute(context: context).replaceWith(const HomeScreen());
-                    } else {
-                      GlobalDialog(context: context, message: 'Failed to Login, please check your email or password and then try again').okDialog(() {
-
-                      });
-                    }
-                  });
+              await AuthServices().loginUser(emailTEC.text, passTEC.text).then((dioResult) {
+                if(dioResult) {
+                  GlobalRoute(context: context).replaceWith(const HomeScreen());
                 } else {
                   GlobalDialog(context: context, message: 'Failed to Login, please check your email or password and then try again').okDialog(() {
 
                   });
                 }
+              });
+            } else {
+              GlobalDialog(context: context, message: 'Failed to Login, please check your email or password and then try again').okDialog(() {
+
               });
             }
           },

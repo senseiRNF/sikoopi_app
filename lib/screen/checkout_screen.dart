@@ -4,13 +4,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
-import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/api/transaction_services.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
@@ -91,7 +90,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             var savingResult = await ImageGallerySaver.saveImage(await image.readAsBytes());
 
             if(savingResult['isSuccess']) {
-              await LocalDB().writeTransactions(
+              await TransactionServices().writeTransaction(
                 TransactionClasses(
                   userId: userId,
                   username: username ?? 'Unknown User',
@@ -103,8 +102,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   transferReceiptImage: savingResult['filePath'],
                 ),
                 widget.orderList,
-              ).then((writeResult) {
-                if(writeResult) {
+              ).then((dioResult) {
+                if(dioResult) {
                   setState(() {
                     stage = stage + 1;
                   });
@@ -124,7 +123,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 var savingResult = await ImageGallerySaver.saveImage(await image.readAsBytes());
 
                 if(savingResult['isSuccess']) {
-                  await LocalDB().writeTransactions(
+                  await TransactionServices().writeTransaction(
                     TransactionClasses(
                       userId: userId,
                       username: username ?? 'Unknown User',
@@ -136,8 +135,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       transferReceiptImage: savingResult['filePath'],
                     ),
                     widget.orderList,
-                  ).then((writeResult) async {
-                    if(writeResult) {
+                  ).then((dioResult) {
+                    if(dioResult) {
                       setState(() {
                         stage = stage + 1;
                       });
@@ -160,7 +159,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Future<bool> onBackPressed() {
     if(stage == 3) {
-      GlobalRoute(context: context).back([true, widget.orderList, receipentNameTEC.text, addressTEC.text]);
+      GlobalRoute(context: context).back(true);
     } else if(stage == 2) {
       setState(() {
         stage = 1;
@@ -276,7 +275,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               break;
                             case 1:
                               if(paymentMethod == 0) {
-                                await LocalDB().writeTransactions(
+                                await TransactionServices().writeTransaction(
                                   TransactionClasses(
                                     userId: userId,
                                     username: username ?? 'Unknown User',
@@ -288,18 +287,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     transferReceiptImage: '',
                                   ),
                                   widget.orderList,
-                                ).then((result) async {
-                                  await LocalDB().updateProduct(
-                                    ProductClasses(
-
-                                    ),
-                                  ).then((updateResult) {
-                                    if(updateResult) {
-                                      setState(() {
-                                        stage = stage + 2;
-                                      });
-                                    }
-                                  });
+                                ).then((dioResult) {
+                                  if(dioResult) {
+                                    setState(() {
+                                      stage = stage + 2;
+                                    });
+                                  }
                                 });
                               } else {
                                 setState(() {

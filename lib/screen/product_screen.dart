@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
+import 'package:sikoopi_app/screen/opname_list_screen.dart';
 import 'package:sikoopi_app/screen/product_form_screen.dart';
-import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/api/product_services.dart';
 import 'package:sikoopi_app/widgets/specific/product_screen_widgets/product_item.dart';
 import 'package:sikoopi_app/widgets/specific/product_screen_widgets/product_screen_header.dart';
 
@@ -16,7 +17,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
 
-  List<ProductClasses> productList = [];
+  List<ProductResponseData> productList = [];
 
   @override
   void initState() {
@@ -26,9 +27,17 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   void initLoad() async {
-    await LocalDB().readAllProduct().then((product) {
+    await ProductServices().readAllProduct().then((dioResult) {
+      List<ProductResponseData> listTemp = [];
+
+      if(dioResult != null && dioResult.data != null) {
+        for(int i = 0; i < dioResult.data!.length; i++) {
+          listTemp.add(dioResult.data![i]);
+        }
+      }
+
       setState(() {
-        productList = product;
+        productList = listTemp;
       });
     });
   }
@@ -61,9 +70,22 @@ class _ProductScreenState extends State<ProductScreen> {
                       return ProductItem(
                         product: productList[index],
                         onPressed: () {
-                          GlobalRoute(context: context).moveTo(ProductFormScreen(product: productList[index]), (callback) {
-                            if(callback != null && callback) {
-                              initLoad();
+                          GlobalDialog(context: context, message: 'Select Menu').listProductMenu([
+                            'Edit Product',
+                            'See Opname History',
+                          ], (selection) {
+                            if(selection != null) {
+                              if(selection == 'Edit Product') {
+                                GlobalRoute(context: context).moveTo(ProductFormScreen(product: productList[index]), (callback) {
+                                  if(callback != null && callback) {
+                                    initLoad();
+                                  }
+                                });
+                              } else {
+                                GlobalRoute(context: context).moveTo(OpnameListScreen(productId: int.parse(productList[index].id!)), (callback) {
+
+                                });
+                              }
                             }
                           });
                         },

@@ -1,48 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/product_classes.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/screen/detail_order_screen.dart';
+import 'package:sikoopi_app/services/api/transaction_services.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
-import 'package:sikoopi_app/widgets/specific/home_screen_widgets/product_display_item.dart';
-
-class UserHomeFragment extends StatelessWidget {
-  final List<ProductClasses> productDisplayList;
-  final Function onPressed;
-
-  const UserHomeFragment({
-    Key? key,
-    required this.productDisplayList,
-    required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: GlobalColor.defaultWhite,
-      ),
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        itemCount: productDisplayList.length,
-        itemBuilder: (BuildContext gridContext, int index) {
-          return ProductDisplayItem(
-            product: productDisplayList[index],
-            onPressed: () => onPressed(productDisplayList[index]),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class AdminHomeFragment extends StatelessWidget {
-  final List<TransactionClasses> activeOrder;
+  final List<TransactionResponseData> activeOrder;
   final Function onRefresh;
 
   const AdminHomeFragment({
@@ -65,9 +31,7 @@ class AdminHomeFragment extends StatelessWidget {
           child: InkWell(
             onTap: () {
               if(activeOrder[index].id != null) {
-                GlobalRoute(context: context).moveTo(DetailOrderScreen(
-                  transaction: activeOrder[index],
-                ), (callback) {
+                GlobalRoute(context: context).moveTo(DetailOrderScreen(transaction: activeOrder[index]), (callback) {
                   if(callback != null && callback) {
                     onRefresh();
                   }
@@ -107,7 +71,7 @@ class AdminHomeFragment extends StatelessWidget {
                   ],
                 ),
                 GlobalText(
-                  content: activeOrder[index].date != null ? DateFormat('dd MMMM yyyy').format(activeOrder[index].date!) : '-',
+                  content: activeOrder[index].date != null ? DateFormat('dd MMMM yyyy').format(DateTime.parse(activeOrder[index].date!)) : '-',
                   size: 16.0,
                   align: TextAlign.start,
                   padding: const GlobalPaddingClass(
@@ -128,7 +92,7 @@ class AdminHomeFragment extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       GlobalText(
-                        content: "Rp. ${NumberFormat('#,###', 'en_ID').format(activeOrder[index].total).replaceAll(',', '.')}",
+                        content: "Rp. ${NumberFormat('#,###', 'en_ID').format(int.parse(activeOrder[index].total!)).replaceAll(',', '.')}",
                         size: 16.0,
                         color: GlobalColor.defaultBlue,
                         isBold: true,
@@ -144,7 +108,7 @@ class AdminHomeFragment extends StatelessWidget {
     ) :
     const Center(
       child: GlobalText(
-        content: "There's no order...",
+        content: "There's no new order...",
         size: 30.0,
         isBold: true,
         align: TextAlign.center,

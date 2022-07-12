@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sikoopi_app/miscellaneous/data_classes/user_classes.dart';
+import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
-import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/api/auth_services.dart';
 import 'package:sikoopi_app/services/shared_preferences.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_input_field.dart';
@@ -115,32 +116,23 @@ class _ProfileScreen extends State<ProfileScreen> {
                                     ),
                                     GlobalElevatedButton(
                                       onPressed: () async {
-                                        await LocalDB().updateUser(
-                                          UserClasses(
-                                            id: userId,
-                                            username: nameTEC.text,
-                                            phoneNo: phoneTEC.text,
-                                            address: addressTEC.text,
-                                          ),
-                                        ).then((result) async {
-                                          if(result) {
-                                            await SharedPref().writeAuthorization(
-                                              UserClasses(
-                                                id: userId,
-                                                username: nameTEC.text,
-                                                phoneNo: phoneTEC.text,
-                                                address: addressTEC.text,
-                                                email: email,
-                                                role: role,
-                                              ),
-                                            ).then((writeResult) {
-                                              if(writeResult) {
-                                                setState(() {
-                                                  isEditMode = !isEditMode;
-                                                });
-                                              }
-                                            });
-                                          }
+                                        GlobalDialog(context: context, message: 'Update data, Are you sure?').optionDialog(() async {
+                                          await AuthServices().updateUser(
+                                            UserClasses(
+                                              id: userId,
+                                              username: nameTEC.text,
+                                              phoneNo: phoneTEC.text,
+                                              address: addressTEC.text,
+                                            ),
+                                          ).then((dioResult) {
+                                            if(dioResult) {
+                                              setState(() {
+                                                isEditMode = !isEditMode;
+                                              });
+                                            }
+                                          });
+                                        }, () {
+
                                         });
                                       },
                                       title: 'Save Profile',

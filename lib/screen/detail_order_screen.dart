@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/cart_classes.dart';
-import 'package:sikoopi_app/miscellaneous/data_classes/transaction_classes.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_dialog.dart';
 import 'package:sikoopi_app/miscellaneous/functions/global_route.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_color.dart';
 import 'package:sikoopi_app/miscellaneous/variables/global_string.dart';
-import 'package:sikoopi_app/services/local_db.dart';
+import 'package:sikoopi_app/services/api/transaction_services.dart';
 import 'package:sikoopi_app/widgets/global_button.dart';
 import 'package:sikoopi_app/widgets/global_padding.dart';
 import 'package:sikoopi_app/widgets/global_text.dart';
@@ -16,7 +14,7 @@ import 'package:sikoopi_app/widgets/specific/detail_order_screen_widgets/detail_
 import 'package:sikoopi_app/widgets/specific/order_cart_screen_widgets/order_cart_screen_header.dart';
 
 class DetailOrderScreen extends StatefulWidget {
-  final TransactionClasses transaction;
+  final TransactionResponseData transaction;
   
   const DetailOrderScreen({
     Key? key,
@@ -28,7 +26,7 @@ class DetailOrderScreen extends StatefulWidget {
 }
 
 class _DetailOrderScreenState extends State<DetailOrderScreen> {
-  List<CartClasses> detailTransaction = [];
+  List<TransactionDetailResponseData> detailTransaction = [];
   
   @override
   void initState() {
@@ -39,10 +37,18 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
   
   void initLoad() async {
     if(widget.transaction.id != null) {
-      await LocalDB().readDetailTransaction(widget.transaction.id!).then((detail) {
-        setState(() {
-          detailTransaction = detail;
-        });
+      await TransactionServices().readTransactionDetail(int.parse(widget.transaction.id!)).then((dioResult) {
+        if(dioResult != null && dioResult.data != null) {
+          List<TransactionDetailResponseData> listTemp = [];
+
+          for(int i = 0; i < dioResult.data!.length; i++) {
+            listTemp.add(dioResult.data![i]);
+          }
+
+          setState(() {
+            detailTransaction = listTemp;
+          });
+        }
       });
     }
   }
@@ -87,7 +93,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                             isBold: true,
                           ),
                           GlobalText(
-                            content: widget.transaction.date != null ? DateFormat('dd MMMM yyyy').format(widget.transaction.date!) : 'Unknown Date',
+                            content: widget.transaction.date != null ? DateFormat('dd MMMM yyyy').format(DateTime.parse(widget.transaction.date!)) : 'Unknown Date',
                             size: 16.0,
                             align: TextAlign.start,
                             padding: const GlobalPaddingClass(
@@ -213,8 +219,8 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                   onPressed: () {
                     GlobalDialog(context: context, message: 'Complete this order, Are you sure?').optionDialog(() async {
                       if(widget.transaction.id != null) {
-                        await LocalDB().completeOrder(widget.transaction.id!).then((result) {
-                          if(result) {
+                        await TransactionServices().updateTransactionStatus(int.parse(widget.transaction.id!), 'Completed').then((dioResult) {
+                          if(dioResult) {
                             GlobalRoute(context: context).back(true);
                           }
                         });
