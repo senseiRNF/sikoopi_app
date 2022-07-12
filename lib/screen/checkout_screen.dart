@@ -55,6 +55,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         setState(() {
           userId = result.id;
           username = result.username;
+          receipentNameTEC.text = result.username ?? 'Unknown Receipent';
           addressTEC.text = result.address ?? 'Unknown Address';
         });
       }
